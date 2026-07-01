@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel bonos IAMC/BYMA — Variación mensual 29-May al 30-Jun-26</title>
+<style>
+  :root{
+    --surface-2:#ffffff;
+    --surface-1:#f7f6f3;
+    --surface-0:#f1efe8;
+    --text-primary:#0b0b0b;
+    --text-secondary:#52514e;
+    --text-muted:#898781;
+    --border:rgba(11,11,11,0.10);
+    --border-strong:rgba(11,11,11,0.25);
+    --green:#008300;
+    --red:#e34948;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-voice: Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-2:#1a1a19;
+      --surface-1:#242423;
+      --surface-0:#141413;
+      --text-primary:#ffffff;
+      --text-secondary:#c3c2b7;
+      --text-muted:#898781;
+      --border:rgba(255,255,255,0.10);
+      --border-strong:rgba(255,255,255,0.25);
+      --green:#3fb63f;
+      --red:#e66767;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--surface-0);
+    font-family:var(--font-sans);
+    color:var(--text-primary);
+    display:flex;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .card{
+    width:100%;
+    max-width:720px;
+    background:var(--surface-2);
+    border:0.5px solid var(--border);
+    border-radius:12px;
+    padding:1.5rem 1.75rem 1.75rem;
+  }
+  h1{
+    font-size:20px;
+    font-weight:500;
+    margin:0 0 2px;
+  }
+  .subtitle{
+    font-size:12px;
+    color:var(--text-muted);
+    margin:0 0 20px;
+  }
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:1.75rem;
+  }
+  .kpi-card{
+    background:var(--surface-1);
+    border-radius:8px;
+    padding:1rem;
+  }
+  .kpi-label{
+    font-size:12px;
+    color:var(--text-secondary);
+  }
+  .kpi-value{
+    font-family:var(--font-voice);
+    font-size:24px;
+    margin-top:2px;
+  }
+  .kpi-sub{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+  .row-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .row-header span:first-child{
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-secondary);
+  }
+  .row-header span:last-child{
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  select{
+    width:auto;
+    font-size:12px;
+    height:28px;
+    padding:0 8px;
+    border-radius:6px;
+    border:0.5px solid var(--border-strong);
+    background:var(--surface-2);
+    color:var(--text-primary);
+  }
+  #bondList{margin-top:2px}
+  .bond-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 4px;
+    border-top:0.5px solid var(--border);
+  }
+  .rank{width:18px;font-size:11px;color:var(--text-muted);text-align:right}
+  .ticker{width:56px;font-size:13px;font-weight:500}
+  .name{flex:1;font-size:12px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sector-tag{width:140px;font-size:11px;color:var(--text-muted);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-wrap{width:100px;display:flex;align-items:center;justify-content:center;height:10px;position:relative}
+  .bar-axis{position:absolute;left:50%;width:1px;height:10px;background:var(--border-strong)}
+  .bar-fill{position:absolute;height:6px;border-radius:3px}
+  .value{width:68px;text-align:right;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:flex-end;gap:2px}
+  .arrow{font-size:12px}
+  .footer{margin-top:16px;font-size:11px;color:var(--text-muted)}
+  @media (max-width:600px){
+    .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sector-tag{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Panel de Bonos IAMC/BYMA</h1>
+  <p class="subtitle">Variación de precio (Cierre ARS), 29-May-26 → 30-Jun-26</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor familia</div>
+      <div class="kpi-value" style="color:var(--green)">+8,6%</div>
+      <div class="kpi-sub">Soberanos USD (Globales)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor familia</div>
+      <div class="kpi-value" style="color:var(--green)">+1,4%</div>
+      <div class="kpi-sub">Provinciales ARS</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor bono</div>
+      <div class="kpi-value" style="color:var(--green)">+19,7%</div>
+      <div class="kpi-sub">CO3D7 · Tít. Deuda Córdoba CER</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor bono</div>
+      <div class="kpi-value" style="color:var(--red)">-7,5%</div>
+      <div class="kpi-sub">PBM27 · Tít. Deuda Bs. As. TAMAR</div>
+    </div>
+  </div>
+
+  <div class="row-header">
+    <span>Variación promedio por familia de instrumento</span>
+  </div>
+  <div style="position:relative;width:100%;height:260px;margin-bottom:2rem">
+    <canvas id="familyChart" role="img" aria-label="Gráfico de barras mostrando la variación mensual promedio de las 8 familias de bonos: Soberanos USD +8.64%, BOPREAL +7.59%, Dollar Linked / Tasa Fija $ +5.32%, Provinciales USD +4.22%, CER +2.28%, LECAP/BONCAP +2.08%, Duales TAMAR +1.70%, Provinciales ARS +1.36%">Soberanos USD +8.64%, BOPREAL +7.59%, Dollar Linked / Tasa Fija $ +5.32%, Provinciales USD +4.22%, CER +2.28%, LECAP/BONCAP +2.08%, Duales TAMAR +1.70%, Provinciales ARS +1.36%.</canvas>
+  </div>
+
+  <div class="row-header">
+    <span>Ranking de bonos IAMC (n=92)</span>
+    <select id="sectorFilter">
+      <option value="all">Todas las familias</option>
+    </select>
+  </div>
+  <div id="bondList"></div>
+
+  <p class="footer">Variación del "Cierre ARS c/VN100" (o equivalente) entre el informe del 29-May-26 y el del 30-Jun-26. Se excluyeron especies con pago de capital entre ambas fechas (ej. BAS26, DICP) por no ser comparables en precio. Familias promediadas en forma simple (no ponderada por monto emitido). Fuente: informes diarios de Bonos IAMC / BYMA.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const bonds = [
+// Soberanos USD - Bonos Globales (Canje 2020)
+{t:'AO27',n:'Bono Global 2027',s:'Soberanos USD',v:6.85},
+{t:'AL29',n:'Global 2029 (Ley Local)',s:'Soberanos USD',v:7.24},
+{t:'GD29',n:'Global 2029 (Ley NY)',s:'Soberanos USD',v:7.67},
+{t:'AL30',n:'Global 2030 (Ley Local)',s:'Soberanos USD',v:6.31},
+{t:'GD30',n:'Global 2030 (Ley NY)',s:'Soberanos USD',v:6.91},
+{t:'AO28',n:'Bono Global 2028',s:'Soberanos USD',v:7.24},
+{t:'AN29',n:'Bono Tesoro 2029',s:'Soberanos USD',v:8.07},
+{t:'AE38',n:'Global 2038 (Ley Local)',s:'Soberanos USD',v:9.30},
+{t:'GD38',n:'Global 2038 (Ley NY)',s:'Soberanos USD',v:10.18},
+{t:'AL35',n:'Global 2035 (Ley Local)',s:'Soberanos USD',v:9.04},
+{t:'GD35',n:'Global 2035 (Ley NY)',s:'Soberanos USD',v:9.83},
+{t:'AL41',n:'Global 2041 (Ley Local)',s:'Soberanos USD',v:11.06},
+{t:'GD41',n:'Global 2041 (Ley NY)',s:'Soberanos USD',v:10.67},
+{t:'GD46',n:'Global 2046 (Ley NY)',s:'Soberanos USD',v:10.61},
+// BOPREAL
+{t:'BPOA7',n:'Bopreal Serie I-A',s:'BOPREAL',v:6.35},
+{t:'BPOB7',n:'Bopreal Serie I-B',s:'BOPREAL',v:7.41},
+{t:'BPOC7',n:'Bopreal Serie I-C',s:'BOPREAL',v:7.82},
+{t:'BPOD7',n:'Bopreal Serie I-D',s:'BOPREAL',v:7.58},
+{t:'BPOA8',n:'Bopreal Serie IV-A',s:'BOPREAL',v:8.58},
+{t:'BPOB8',n:'Bopreal Serie IV-B',s:'BOPREAL',v:7.82},
+// LECAP / BONCAP
+{t:'S31L6',n:'Lecap Jul-26',s:'LECAP/BONCAP',v:1.76},
+{t:'S14G6',n:'Lecap Ago-26',s:'LECAP/BONCAP',v:1.74},
+{t:'S31G6',n:'Lecap Ago-26 (II)',s:'LECAP/BONCAP',v:1.83},
+{t:'S15S6',n:'Lecap Sep-26',s:'LECAP/BONCAP',v:1.99},
+{t:'S30S6',n:'Lecap Sep-26 (II)',s:'LECAP/BONCAP',v:2.02},
+{t:'S30O6',n:'Lecap Oct-26',s:'LECAP/BONCAP',v:1.95},
+{t:'S30N6',n:'Lecap Nov-26',s:'LECAP/BONCAP',v:2.06},
+{t:'T15E7',n:'Boncap Ene-27',s:'LECAP/BONCAP',v:2.07},
+{t:'T30A7',n:'Boncap Abr-27',s:'LECAP/BONCAP',v:2.60},
+{t:'T31Y7',n:'Boncap May-27',s:'LECAP/BONCAP',v:2.67},
+{t:'T30J7',n:'Boncap Jun-27',s:'LECAP/BONCAP',v:2.20},
+// Duales TAMAR
+{t:'TTS26',n:'Dual TF/TAMAR Sep-26',s:'Duales TAMAR',v:1.76},
+{t:'TTD26',n:'Dual TF/TAMAR Dic-26',s:'Duales TAMAR',v:1.45},
+{t:'TXMJ8',n:'Dual CER/TAMAR Jun-28',s:'Duales TAMAR',v:1.81},
+{t:'TXMJ9',n:'Dual CER/TAMAR Jun-29',s:'Duales TAMAR',v:1.59},
+{t:'M31G6',n:'Letra TAMAR Ago-26',s:'Duales TAMAR',v:1.88},
+{t:'TMF27',n:'Bono TAMAR Feb-27',s:'Duales TAMAR',v:1.39},
+{t:'TMG27',n:'Bono TAMAR Ago-27',s:'Duales TAMAR',v:0.73},
+{t:'TMF28',n:'Bono TAMAR Feb-28',s:'Duales TAMAR',v:1.92},
+{t:'TMG28',n:'Bono TAMAR Ago-28',s:'Duales TAMAR',v:2.78},
+// CER (cupón cero + tasa fija)
+{t:'TZXO6',n:'Bono CER Oct-26',s:'CER',v:1.29},
+{t:'TZXD6',n:'Bono CER Dic-26',s:'CER',v:0.95},
+{t:'TZXM7',n:'Bono CER Mar-27',s:'CER',v:1.29},
+{t:'TZXA7',n:'Bono CER Abr-27',s:'CER',v:1.03},
+{t:'TZXY7',n:'Bono CER May-27',s:'CER',v:1.66},
+{t:'TZX27',n:'Bono CER Jun-27',s:'CER',v:0.03},
+{t:'TZXS7',n:'Bono CER Sep-27',s:'CER',v:1.59},
+{t:'TZXD7',n:'Bono CER Dic-27',s:'CER',v:1.83},
+{t:'TZXM8',n:'Bono CER Mar-28',s:'CER',v:0.63},
+{t:'TZX28',n:'Bono CER Jun-28',s:'CER',v:1.02},
+{t:'TZXM9',n:'Bono CER Mar-29',s:'CER',v:1.73},
+{t:'X31L6',n:'Letra CER Jul-26',s:'CER',v:1.76},
+{t:'X30S6',n:'Letra CER Sep-26',s:'CER',v:1.46},
+{t:'X30N6',n:'Letra CER Nov-26',s:'CER',v:1.02},
+{t:'PAP0',n:'Par Peso 2038',s:'CER',v:6.51},
+{t:'PARP',n:'Par Peso 2038 (II)',s:'CER',v:6.75},
+{t:'TX26',n:'Bono CER TF 2026',s:'CER',v:1.22},
+{t:'TX28',n:'Bono CER TF 2028',s:'CER',v:2.17},
+{t:'TX31',n:'Bono CER TF 2031',s:'CER',v:0.92},
+{t:'CUAP',n:'Cuasipar 2045',s:'CER',v:10.83},
+// Dollar Linked / Tasa Fija $
+{t:'TO26',n:'Bono Tesoro TF 2026',s:'Dollar Linked / TF $',v:1.92},
+{t:'TY30P',n:'Bono Tesoro TF 2030',s:'Dollar Linked / TF $',v:2.29},
+{t:'D30S6',n:'Letra Dollar Linked Sep-26',s:'Dollar Linked / TF $',v:5.93},
+{t:'D31L6',n:'Letra Dollar Linked Jul-26',s:'Dollar Linked / TF $',v:5.24},
+{t:'D31M7',n:'Letra Dollar Linked Mar-27',s:'Dollar Linked / TF $',v:8.36},
+{t:'TZV27',n:'Bono Dollar Linked Jun-27',s:'Dollar Linked / TF $',v:9.26},
+{t:'TZV28',n:'Bono Dollar Linked Jun-28',s:'Dollar Linked / TF $',v:4.26},
+// Provinciales USD (Hard Dollar)
+{t:'BA37D',n:'Buenos Aires 2037 (A)',s:'Provinciales USD',v:9.31},
+{t:'BB37D',n:'Buenos Aires 2037 (B)',s:'Provinciales USD',v:11.51},
+{t:'BC37D',n:'Buenos Aires 2037 (C)',s:'Provinciales USD',v:8.59},
+{t:'BDC33',n:'C.A.B.A. 2033',s:'Provinciales USD',v:7.30},
+{t:'CH24D',n:'Chaco 2028',s:'Provinciales USD',v:0.00},
+{t:'CO24D',n:'Córdoba 2027',s:'Provinciales USD',v:0.00},
+{t:'CO27D',n:'Córdoba 2029',s:'Provinciales USD',v:0.00},
+{t:'ERF25',n:'Entre Ríos 2028',s:'Provinciales USD',v:7.81},
+{t:'ERM33',n:'Entre Ríos 2033',s:'Provinciales USD',v:6.57},
+{t:'JUS22',n:'Jujuy 2027',s:'Provinciales USD',v:0.00},
+{t:'NDT11',n:'Neuquén 2030 (I)',s:'Provinciales USD',v:0.00},
+{t:'NDT25',n:'Neuquén 2030 (II)',s:'Provinciales USD',v:6.04},
+{t:'PMM29',n:'Mendoza 2029',s:'Provinciales USD',v:3.55},
+{t:'SA24D',n:'Salta 2027',s:'Provinciales USD',v:6.71},
+{t:'SFD34',n:'Santa Fe 2034',s:'Provinciales USD',v:0.12},
+{t:'TFU27',n:'Tierra del Fuego 2030',s:'Provinciales USD',v:0.00},
+// Provinciales ARS
+{t:'BAF27',n:'Tít. Deuda Córdoba TAMAR',s:'Provinciales ARS',v:0.49},
+{t:'CO2D7',n:'Tít. Deuda Córdoba TAMAR (II)',s:'Provinciales ARS',v:-3.00},
+{t:'CO3D7',n:'Tít. Deuda Córdoba CER',s:'Provinciales ARS',v:19.65},
+{t:'COY27',n:'Tít. Deuda Córdoba CER (II)',s:'Provinciales ARS',v:5.24},
+{t:'PBM27',n:'Tít. Deuda Buenos Aires TAMAR',s:'Provinciales ARS',v:-7.48},
+{t:'PBM28',n:'Tít. Deuda Buenos Aires TAMAR (II)',s:'Provinciales ARS',v:0.00},
+{t:'PMD26',n:'Tít. Deuda Mendoza TAMAR',s:'Provinciales ARS',v:-7.26},
+{t:'PMM27',n:'Tít. Deuda Mendoza CER',s:'Provinciales ARS',v:0.00},
+{t:'SFN27',n:'Bono Santa Fe BADLAR',s:'Provinciales ARS',v:3.24}
+];
+bonds.sort((a,b)=>b.v-a.v);
+
+const familyData = [
+{s:'Soberanos USD',v:8.64},
+{s:'BOPREAL',v:7.59},
+{s:'Dollar Linked / TF $',v:5.32},
+{s:'Provinciales USD',v:4.22},
+{s:'CER',v:2.28},
+{s:'LECAP/BONCAP',v:2.08},
+{s:'Duales TAMAR',v:1.70},
+{s:'Provinciales ARS',v:1.36}
+];
+familyData.sort((a,b)=>b.v-a.v);
+
+const styles = getComputedStyle(document.documentElement);
+const green = styles.getPropertyValue('--green').trim() || '#008300';
+const red = styles.getPropertyValue('--red').trim() || '#e34948';
+const muted = styles.getPropertyValue('--text-muted').trim() || '#898781';
+
+new Chart(document.getElementById('familyChart'), {
+  type: 'bar',
+  data: {
+    labels: familyData.map(d=>d.s),
+    datasets: [{
+      data: familyData.map(d=>d.v),
+      backgroundColor: familyData.map(d=>d.v>=0?green:red),
+      borderRadius: 4,
+      barThickness: 20
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { left: 4, right: 40 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (ctx) => (ctx.raw>0?'+':'') + ctx.raw.toFixed(2) + '%' } }
+    },
+    scales: {
+      x: { grid: { color: '#e1e0d9' }, ticks: { color: muted, font: { size: 11 }, callback: (v)=> (v>0?'+':'')+v+'%' } },
+      y: { grid: { display: false }, ticks: { color: muted, font: { size: 11 } } }
+    }
+  },
+  plugins: [{
+    id: 'valueLabels',
+    afterDatasetsDraw(chart) {
+      const {ctx} = chart;
+      chart.data.datasets[0].data.forEach((val, i) => {
+        const meta = chart.getDatasetMeta(0).data[i];
+        ctx.save();
+        ctx.font = '500 12px sans-serif';
+        ctx.fillStyle = val>=0 ? green : red;
+        ctx.textBaseline = 'middle';
+        if (val>=0) { ctx.textAlign = 'left'; ctx.fillText((val>0?'+':'')+val.toFixed(2)+'%', meta.x+6, meta.y); }
+        else { ctx.textAlign = 'right'; ctx.fillText(val.toFixed(2)+'%', meta.x-6, meta.y); }
+        ctx.restore();
+      });
+    }
+  }]
+});
+
+const sectorSet = [...new Set(bonds.map(d=>d.s))];
+const filterEl = document.getElementById('sectorFilter');
+sectorSet.forEach(s=>{
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  filterEl.appendChild(opt);
+});
+
+const maxAbs = Math.max(...bonds.map(d=>Math.abs(d.v)));
+
+function renderList(filter){
+  const list = document.getElementById('bondList');
+  list.innerHTML = '';
+  const items = filter==='all' ? bonds : bonds.filter(d=>d.s===filter);
+  items.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className = 'bond-row';
+    const pos = d.v>=0;
+    const barWidth = Math.abs(d.v)/maxAbs*50;
+    row.innerHTML =
+      '<span class="rank">'+(i+1)+'</span>'+
+      '<span class="ticker">'+d.t+'</span>'+
+      '<span class="name">'+d.n+'</span>'+
+      '<span class="sector-tag">'+d.s+'</span>'+
+      '<span class="bar-wrap">'+
+        '<span class="bar-axis"></span>'+
+        '<span class="bar-fill" style="'+(pos?'left:50%':'right:50%')+';width:'+barWidth+'px;background:'+(pos?green:red)+'"></span>'+
+      '</span>'+
+      '<span class="value" style="color:'+(pos?green:red)+'">'+
+        '<span class="arrow">'+(pos?'▲':'▼')+'</span>'+(pos?'+':'')+d.v.toFixed(2)+'%</span>';
+    list.appendChild(row);
+  });
+}
+renderList('all');
+filterEl.addEventListener('change', (e)=>renderList(e.target.value));
+</script>
+</body>
+</html>
