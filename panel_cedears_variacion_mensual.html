@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel CEDEARs — Variación mensual 29-May al 30-Jun-26</title>
+<style>
+  :root{
+    --surface-2:#ffffff;
+    --surface-1:#f7f6f3;
+    --surface-0:#f1efe8;
+    --text-primary:#0b0b0b;
+    --text-secondary:#52514e;
+    --text-muted:#898781;
+    --border:rgba(11,11,11,0.10);
+    --border-strong:rgba(11,11,11,0.25);
+    --green:#008300;
+    --red:#e34948;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-voice: Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-2:#1a1a19;
+      --surface-1:#242423;
+      --surface-0:#141413;
+      --text-primary:#ffffff;
+      --text-secondary:#c3c2b7;
+      --text-muted:#898781;
+      --border:rgba(255,255,255,0.10);
+      --border-strong:rgba(255,255,255,0.25);
+      --green:#3fb63f;
+      --red:#e66767;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--surface-0);
+    font-family:var(--font-sans);
+    color:var(--text-primary);
+    display:flex;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .card{
+    width:100%;
+    max-width:720px;
+    background:var(--surface-2);
+    border:0.5px solid var(--border);
+    border-radius:12px;
+    padding:1.5rem 1.75rem 1.75rem;
+  }
+  h1{
+    font-size:20px;
+    font-weight:500;
+    margin:0 0 2px;
+  }
+  .subtitle{
+    font-size:12px;
+    color:var(--text-muted);
+    margin:0 0 20px;
+  }
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:1.75rem;
+  }
+  .kpi-card{
+    background:var(--surface-1);
+    border-radius:8px;
+    padding:1rem;
+  }
+  .kpi-label{
+    font-size:12px;
+    color:var(--text-secondary);
+  }
+  .kpi-value{
+    font-family:var(--font-voice);
+    font-size:24px;
+    margin-top:2px;
+  }
+  .kpi-sub{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+  .row-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .row-header span:first-child{
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-secondary);
+  }
+  .row-header span:last-child{
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  select{
+    width:auto;
+    font-size:12px;
+    height:28px;
+    padding:0 8px;
+    border-radius:6px;
+    border:0.5px solid var(--border-strong);
+    background:var(--surface-2);
+    color:var(--text-primary);
+  }
+  .search-row{display:flex;gap:8px;margin-bottom:6px}
+  .search-row input{
+    flex:1;font-size:12px;height:28px;padding:0 8px;border-radius:6px;
+    border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary);
+  }
+  #stockList{margin-top:2px;max-height:520px;overflow-y:auto}
+  .stock-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 4px;
+    border-top:0.5px solid var(--border);
+  }
+  .rank{width:26px;font-size:11px;color:var(--text-muted);text-align:right}
+  .ticker{width:52px;font-size:13px;font-weight:500}
+  .name{flex:1;font-size:12px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sector-tag{width:150px;font-size:11px;color:var(--text-muted);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-wrap{width:90px;display:flex;align-items:center;justify-content:center;height:10px;position:relative}
+  .bar-axis{position:absolute;left:50%;width:1px;height:10px;background:var(--border-strong)}
+  .bar-fill{position:absolute;height:6px;border-radius:3px}
+  .value{width:70px;text-align:right;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:flex-end;gap:2px}
+  .arrow{font-size:12px}
+  .footer{margin-top:16px;font-size:11px;color:var(--text-muted)}
+  @media (max-width:600px){
+    .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .sector-tag{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Panel de CEDEARs — BYMA</h1>
+  <p class="subtitle">Variación de precio (Cierre), 29-May-26 → 30-Jun-26 · ETFs + Acciones por sector</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor sector</div>
+      <div class="kpi-value" style="color:var(--green)">+13,7%</div>
+      <div class="kpi-sub">Salud</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor sector</div>
+      <div class="kpi-value" style="color:var(--red)">-7,6%</div>
+      <div class="kpi-sub">Energía</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor CEDEAR</div>
+      <div class="kpi-value" style="color:var(--green)">+71,3%</div>
+      <div class="kpi-sub">AMAT · Applied Materials</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor CEDEAR</div>
+      <div class="kpi-value" style="color:var(--red)">-52,1%</div>
+      <div class="kpi-sub">SPCE · Virgin Galactic</div>
+    </div>
+  </div>
+
+  <div class="row-header">
+    <span>Variación promedio por sector (11 sectores, 380 especies)</span>
+  </div>
+  <div style="position:relative;width:100%;height:280px;margin-bottom:2rem">
+    <canvas id="sectorChart" role="img" aria-label="Gráfico de barras mostrando la variación mensual promedio de 11 sectores de CEDEARs: Salud +13.70%, Servicios Financieros +8.18%, Tecnología de la Información +3.24%, Consumo Básico +2.49%, Industriales +2.32%, ETF +1.97%, Comunicaciones +0.61%, Servicios Públicos -0.09%, Consumo Discrecional -0.22%, Materiales -2.58%, Energía -7.55%">Salud +13.70%, Servicios Financieros +8.18%, Tecnología de la Información +3.24%, Consumo Básico +2.49%, Industriales +2.32%, ETF +1.97%, Comunicaciones +0.61%, Servicios Públicos -0.09%, Consumo Discrecional -0.22%, Materiales -2.58%, Energía -7.55%.</canvas>
+  </div>
+
+  <div class="row-header">
+    <span>Ranking de CEDEARs (n=380)</span>
+    <select id="sectorFilter">
+      <option value="all">Todos los sectores</option>
+    </select>
+  </div>
+  <div class="search-row">
+    <input type="text" id="searchBox" placeholder="Buscar ticker o nombre...">
+  </div>
+  <div id="stockList"></div>
+
+  <p class="footer">Variación del precio de cierre entre el informe del 29-May-26 y el del 30-Jun-26. DD (DuPont) muestra +195,8% probablemente por una reorganización societaria/corporate action y no por movimiento de mercado puro — se incluye en el ranking pero se excluyó del KPI "Mejor CEDEAR". Sectores promediados en forma simple (no ponderados por capitalización). Fuente: informes diarios de CEDEARs IAMC / BYMA.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const stocks = [{"t": "DD", "n": "DuPont de Nemours", "s": "Materiales", "v": 195.81}, {"t": "AMAT", "n": "Applied Materials", "s": "Tecnología de la Información", "v": 71.31}, {"t": "MRNA", "n": "Moderna Inc", "s": "Salud", "v": 55.99}, {"t": "MRVL", "n": "Marvell Technology", "s": "Tecnología de la Información", "v": 53.68}, {"t": "GLW", "n": "Corning Incorporated", "s": "Tecnología de la Información", "v": 49.48}, {"t": "ALAB", "n": "Astera Labs", "s": "Tecnología de la Información", "v": 48.31}, {"t": "BB", "n": "BlackBerry", "s": "Tecnología de la Información", "v": 46.97}, {"t": "LRCX", "n": "Lam Research Corp", "s": "Tecnología de la Información", "v": 44.71}, {"t": "SNDK", "n": "Sandisk Corporation", "s": "Tecnología de la Información", "v": 42.03}, {"t": "HIMS", "n": "Hims & Hers Health", "s": "Salud", "v": 39.67}, {"t": "ASML", "n": "ASML Holding", "s": "Tecnología de la Información", "v": 29.76}, {"t": "AAL", "n": "American Airlines", "s": "Industriales", "v": 29.45}, {"t": "TRIP", "n": "Tripadvisor", "s": "Comunicaciones", "v": 29.18}, {"t": "CAT", "n": "Caterpillar Inc", "s": "Industriales", "v": 28.35}, {"t": "CAH", "n": "Cardinal Health", "s": "Salud", "v": 27.45}, {"t": "INTC", "n": "Intel Corporation", "s": "Tecnología de la Información", "v": 27.07}, {"t": "NBIS", "n": "Nebius Group", "s": "Tecnología de la Información", "v": 27.02}, {"t": "PANW", "n": "Palo Alto Networks", "s": "Tecnología de la Información", "v": 26.93}, {"t": "MU", "n": "Micron Technology", "s": "Tecnología de la Información", "v": 26.47}, {"t": "UAL", "n": "United Airlines", "s": "Industriales", "v": 24.84}, {"t": "ANF", "n": "Abercrombie & Fitch", "s": "Consumo Discrecional", "v": 22.96}, {"t": "DE", "n": "Deere & Company", "s": "Industriales", "v": 22.83}, {"t": "TEM", "n": "Tempus AI Inc", "s": "Tecnología de la Información", "v": 22.21}, {"t": "CVS", "n": "CVS Health Corp", "s": "Salud", "v": 22.15}, {"t": "GE", "n": "General Electric", "s": "Industriales", "v": 21.35}, {"t": "ABBV", "n": "AbbVie Inc", "s": "Salud", "v": 21.21}, {"t": "RBLX", "n": "Roblox Corp", "s": "Comunicaciones", "v": 21.2}, {"t": "AMD", "n": "Advanced Micro Devices", "s": "Tecnología de la Información", "v": 20.07}, {"t": "TRVV", "n": "Travelers Cos", "s": "Servicios Financieros", "v": 19.97}, {"t": "TSM", "n": "Taiwan Semic. Manuf.", "s": "Tecnología de la Información", "v": 19.73}, {"t": "IP", "n": "International Paper", "s": "Materiales", "v": 19.39}, {"t": "DAL", "n": "Delta Air Lines", "s": "Industriales", "v": 19.13}, {"t": "JNJ", "n": "Johnson & Johnson", "s": "Salud", "v": 18.78}, {"t": "KMB", "n": "Kimberly Clark", "s": "Consumo Básico", "v": 18.46}, {"t": "ETSY", "n": "Etsy Inc", "s": "Tecnología de la Información", "v": 17.81}, {"t": "VRTX", "n": "Vertex Pharmaceuticals", "s": "Salud", "v": 17.16}, {"t": "HD", "n": "Home Depot", "s": "Consumo Discrecional", "v": 16.82}, {"t": "SAN", "n": "Banco Santander", "s": "Servicios Financieros", "v": 16.8}, {"t": "IBN", "n": "ICICI Bank", "s": "Salud", "v": 16.79}, {"t": "C", "n": "Citigroup", "s": "Servicios Financieros", "v": 16.75}, {"t": "USB", "n": "U.S. Bancorp", "s": "Servicios Financieros", "v": 16.69}, {"t": "BIIB", "n": "Biogen Inc", "s": "Salud", "v": 16.38}, {"t": "SYY", "n": "Sysco Corporation", "s": "Consumo Básico", "v": 16.11}, {"t": "BA.C", "n": "Bank of America", "s": "Servicios Financieros", "v": 16.08}, {"t": "PBI", "n": "Pitney Bowes", "s": "Tecnología de la Información", "v": 16.07}, {"t": "IBB", "n": "iShares Nasdaq Biotechnology", "s": "ETF", "v": 16.07}, {"t": "UNH", "n": "UnitedHealth Group", "s": "Salud", "v": 15.61}, {"t": "SMH", "n": "VanEck Semiconductor ETF", "s": "ETF", "v": 15.6}, {"t": "JPM", "n": "JPMorgan Chase", "s": "Servicios Financieros", "v": 15.07}, {"t": "BCS", "n": "Barclays Bank", "s": "Servicios Financieros", "v": 14.93}, {"t": "LLY", "n": "Eli Lilly and Company", "s": "Salud", "v": 14.82}, {"t": "PCAR", "n": "Paccar Inc", "s": "Industriales", "v": 14.57}, {"t": "RACE", "n": "Ferrari NV", "s": "Industriales", "v": 14.47}, {"t": "ITUB3", "n": "Banco Itau Unibanco (3)", "s": "Servicios Financieros", "v": 14.32}, {"t": "MRK", "n": "Merck & Co", "s": "Salud", "v": 14.31}, {"t": "ECL", "n": "Ecolab Inc", "s": "Materiales", "v": 14.2}, {"t": "SNA", "n": "Snap-on Inc", "s": "Industriales", "v": 14.08}, {"t": "HDB", "n": "HDFC Bank", "s": "Servicios Financieros", "v": 13.7}, {"t": "NMR", "n": "Nomura Holdings", "s": "Servicios Financieros", "v": 13.49}, {"t": "GT", "n": "Goodyear Tire & Rubber", "s": "Industriales", "v": 13.37}, {"t": "XLI", "n": "Industrial Select SPDR", "s": "ETF", "v": 13.33}, {"t": "AMGN", "n": "Amgen Inc", "s": "Salud", "v": 13.27}, {"t": "ABNB", "n": "Airbnb Inc", "s": "Consumo Discrecional", "v": 12.92}, {"t": "YELP", "n": "Yelp Inc", "s": "Comunicaciones", "v": 12.81}, {"t": "HOOD", "n": "Robinhood Markets", "s": "Servicios Financieros", "v": 12.76}, {"t": "FMX", "n": "Fomento Ec. Mexicano", "s": "Materiales", "v": 12.53}, {"t": "WFC", "n": "Wells Fargo", "s": "Servicios Financieros", "v": 12.31}, {"t": "PAC", "n": "Grupo Aeroportuario Pacifico", "s": "Industriales", "v": 12.28}, {"t": "BBV", "n": "Banco Bilbao Vizcaya", "s": "Servicios Financieros", "v": 12.27}, {"t": "ANET", "n": "Arista Networks", "s": "Tecnología de la Información", "v": 12.15}, {"t": "AXP", "n": "American Express", "s": "Servicios Financieros", "v": 12.1}, {"t": "MFG", "n": "Mizuho Financial", "s": "Servicios Financieros", "v": 12.05}, {"t": "MDT", "n": "Medtronic PLC", "s": "Salud", "v": 12.04}, {"t": "SPHQ", "n": "Invesco S&P 500 Quality", "s": "ETF", "v": 11.85}, {"t": "RTX", "n": "RTX Corporation", "s": "Industriales", "v": 11.78}, {"t": "ABT", "n": "Abbott Laboratories", "s": "Salud", "v": 11.78}, {"t": "XLV", "n": "Health Care Select SPDR", "s": "ETF", "v": 11.68}, {"t": "UL", "n": "Unilever N.V.", "s": "Consumo Básico", "v": 11.56}, {"t": "SE", "n": "Sea Ltd", "s": "Tecnología de la Información", "v": 11.5}, {"t": "LYG", "n": "Lloyds Banking Group", "s": "Servicios Financieros", "v": 11.24}, {"t": "UPST", "n": "Upstart Holdings", "s": "Servicios Financieros", "v": 11.19}, {"t": "MUFG", "n": "Mitsubishi UFJ Financial", "s": "Servicios Financieros", "v": 11.14}, {"t": "AAP", "n": "Advance Auto Parts", "s": "Consumo Discrecional", "v": 10.97}, {"t": "MMM", "n": "3M Company", "s": "Industriales", "v": 10.96}, {"t": "NVO", "n": "Novo Nordisk", "s": "Salud", "v": 10.79}, {"t": "BRKB", "n": "Berkshire Hathaway", "s": "Servicios Financieros", "v": 10.74}, {"t": "WEGE3", "n": "WEG S.A.", "s": "Industriales", "v": 10.61}, {"t": "ROKU", "n": "Roku Inc", "s": "Comunicaciones", "v": 10.48}, {"t": "CRWD", "n": "CrowdStrike Holdings", "s": "Tecnología de la Información", "v": 10.06}, {"t": "DHR", "n": "Danaher Corp", "s": "Salud", "v": 9.79}, {"t": "V", "n": "Visa Inc", "s": "Servicios Financieros", "v": 9.73}, {"t": "NVS", "n": "Novartis AG", "s": "Salud", "v": 9.71}, {"t": "XLF", "n": "Financial Select SPDR", "s": "ETF", "v": 9.5}, {"t": "MA", "n": "Mastercard Inc", "s": "Servicios Financieros", "v": 9.41}, {"t": "BNY", "n": "Bank of NY Mellon", "s": "Servicios Financieros", "v": 9.4}, {"t": "PINS", "n": "Pinterest Inc", "s": "Comunicaciones", "v": 9.31}, {"t": "HWM", "n": "Arconic Inc", "s": "Industriales", "v": 9.3}, {"t": "NTES", "n": "NetEase Inc", "s": "Comunicaciones", "v": 9.26}, {"t": "IWM", "n": "iShares Russell 2000", "s": "ETF", "v": 9.16}, {"t": "SBS", "n": "Cia Sabesp", "s": "Servicios Públicos", "v": 9.0}, {"t": "GSK", "n": "GSK plc", "s": "Salud", "v": 8.83}, {"t": "ITUB", "n": "Itau Unibanco Holding", "s": "Servicios Financieros", "v": 8.78}, {"t": "IJH", "n": "iShares Core S&P Mid-Cap", "s": "ETF", "v": 8.74}, {"t": "MO", "n": "Altria Group", "s": "Consumo Básico", "v": 8.67}, {"t": "ASR", "n": "Grupo Aeroportuario Sureste", "s": "Industriales", "v": 8.66}, {"t": "SBSP3", "n": "Cia Saneamiento Basico", "s": "Servicios Públicos", "v": 8.63}, {"t": "UNP", "n": "Union Pacific", "s": "Industriales", "v": 8.61}, {"t": "SBUX", "n": "Starbucks Corp", "s": "Consumo Discrecional", "v": 8.48}, {"t": "MSI", "n": "Motorola Solutions", "s": "Tecnología de la Información", "v": 8.31}, {"t": "CCL", "n": "Carnival Corp", "s": "Consumo Discrecional", "v": 8.25}, {"t": "ITA", "n": "iShares US Aerospace&Defense", "s": "ETF", "v": 8.17}, {"t": "TGT", "n": "Target Corp", "s": "Consumo Discrecional", "v": 8.09}, {"t": "KO", "n": "Coca-Cola Company", "s": "Consumo Básico", "v": 8.04}, {"t": "PM", "n": "Philip Morris International", "s": "Consumo Básico", "v": 7.67}, {"t": "UBER", "n": "Uber Technologies", "s": "Industriales", "v": 7.65}, {"t": "EBAY", "n": "eBay Inc", "s": "Tecnología de la Información", "v": 7.62}, {"t": "DIA", "n": "SPDR Dow Jones Industrial", "s": "Consumo Básico", "v": 7.59}, {"t": "RSP", "n": "Invesco S&P 500 Equal Weight", "s": "ETF", "v": 7.54}, {"t": "XLU", "n": "Utilities Select SPDR", "s": "ETF", "v": 7.52}, {"t": "AZN", "n": "AstraZeneca plc", "s": "Salud", "v": 7.44}, {"t": "PHG", "n": "Royal Philips", "s": "Salud", "v": 7.41}, {"t": "TMO", "n": "Thermo Fisher Scientific", "s": "Salud", "v": 7.4}, {"t": "PG", "n": "Procter & Gamble", "s": "Consumo Básico", "v": 7.24}, {"t": "AMX", "n": "America Movil", "s": "Comunicaciones", "v": 7.23}, {"t": "SDA", "n": "Suncar Technology Group", "s": "Tecnología de la Información", "v": 7.19}, {"t": "AVY", "n": "Avery Dennison", "s": "Consumo Discrecional", "v": 7.14}, {"t": "NGG", "n": "National Grid PLC", "s": "Energía", "v": 7.03}, {"t": "HSBC", "n": "HSBC Holding", "s": "Servicios Financieros", "v": 6.83}, {"t": "ARM", "n": "Arm Holdings", "s": "Tecnología de la Información", "v": 6.83}, {"t": "CL", "n": "Colgate Palmolive", "s": "Consumo Básico", "v": 6.75}, {"t": "BMY", "n": "Bristol-Myers Squibb", "s": "Salud", "v": 6.68}, {"t": "ORLY", "n": "O'Reilly Automotive", "s": "Consumo Discrecional", "v": 6.63}, {"t": "TV", "n": "Grupo Televisa", "s": "Comunicaciones", "v": 6.63}, {"t": "VIVT3", "n": "Telefonica Brasil (3)", "s": "Comunicaciones", "v": 6.44}, {"t": "RIOT", "n": "Riot Platforms", "s": "Tecnología de la Información", "v": 6.42}, {"t": "IFF", "n": "Intl Flavors & Fragrances", "s": "Materiales", "v": 6.33}, {"t": "CIBR", "n": "First Trust Nasdaq Cybersecurity", "s": "ETF", "v": 6.29}, {"t": "VIG", "n": "Vanguard Dividend Appreciation", "s": "ETF", "v": 6.26}, {"t": "GRMN", "n": "Garmin Ltd", "s": "Tecnología de la Información", "v": 6.21}, {"t": "ADP", "n": "Automatic Data Processing", "s": "Tecnología de la Información", "v": 6.2}, {"t": "NU", "n": "Nu Holdings", "s": "Servicios Financieros", "v": 6.18}, {"t": "XLRE", "n": "Real Estate Select SPDR", "s": "ETF", "v": 6.08}, {"t": "NEE", "n": "NextEra Energy", "s": "Servicios Públicos", "v": 6.02}, {"t": "XYZ", "n": "Block Inc", "s": "Tecnología de la Información", "v": 6.0}, {"t": "AIG", "n": "American International Group", "s": "Servicios Financieros", "v": 5.76}, {"t": "HMC", "n": "Honda Motor Co", "s": "Consumo Discrecional", "v": 5.71}, {"t": "BKNG", "n": "Booking Holdings", "s": "Consumo Discrecional", "v": 5.63}, {"t": "MELI", "n": "MercadoLibre", "s": "Tecnología de la Información", "v": 5.59}, {"t": "SH", "n": "ProShares Short S&P500", "s": "ETF", "v": 5.59}, {"t": "XLP", "n": "Consumer Staples SPDR", "s": "ETF", "v": 5.45}, {"t": "EWJ", "n": "iShares MSCI Japan", "s": "ETF", "v": 5.42}, {"t": "BX", "n": "Blackstone Inc", "s": "Servicios Financieros", "v": 5.27}, {"t": "SNOW", "n": "Snowflake Inc", "s": "Tecnología de la Información", "v": 5.15}, {"t": "GLNG", "n": "Golar LNG", "s": "Energía", "v": 5.14}, {"t": "QQQ", "n": "Invesco QQQ Trust", "s": "ETF", "v": 5.1}, {"t": "XLK", "n": "Technology Select SPDR", "s": "ETF", "v": 5.02}, {"t": "VIV", "n": "Telefonica Brasil", "s": "Comunicaciones", "v": 4.81}, {"t": "XLB", "n": "Materials Select SPDR", "s": "ETF", "v": 4.81}, {"t": "AEG", "n": "Aegon N.V.", "s": "Servicios Financieros", "v": 4.78}, {"t": "IVE", "n": "iShares S&P 500 Value", "s": "ETF", "v": 4.78}, {"t": "BBDC3", "n": "Banco Bradesco (3)", "s": "Servicios Financieros", "v": 4.74}, {"t": "ING", "n": "ING Group", "s": "Servicios Financieros", "v": 4.7}, {"t": "EEM", "n": "iShares MSCI Emerging Mkts", "s": "ETF", "v": 4.65}, {"t": "JCI", "n": "Johnson Controls", "s": "Industriales", "v": 4.59}, {"t": "VEA", "n": "Vanguard FTSE Developed", "s": "ETF", "v": 4.49}, {"t": "VST", "n": "Vistra Corporation", "s": "Servicios Públicos", "v": 4.27}, {"t": "ACWI", "n": "iShares MSCI ACWI", "s": "ETF", "v": 4.19}, {"t": "ESGU", "n": "iShares ESG Aware MSCI USA", "s": "ETF", "v": 4.17}, {"t": "GS", "n": "Goldman Sachs Group", "s": "Servicios Financieros", "v": 4.15}, {"t": "IEUR", "n": "iShares Core MSCI Europe", "s": "ETF", "v": 4.11}, {"t": "PSQ", "n": "ProShares Short QQQ", "s": "ETF", "v": 4.06}, {"t": "IEMG", "n": "iShares Core MSCI Emerging", "s": "ETF", "v": 4.05}, {"t": "SPY", "n": "SPDR S&P 500", "s": "ETF", "v": 4.05}, {"t": "IVV", "n": "iShares Core S&P 500", "s": "ETF", "v": 3.91}, {"t": "EFA", "n": "iShares MSCI EAFE", "s": "ETF", "v": 3.87}, {"t": "ARKK", "n": "ARK Innovation", "s": "ETF", "v": 3.79}, {"t": "BBD", "n": "Banco Bradesco", "s": "Servicios Financieros", "v": 3.54}, {"t": "FMCC", "n": "Freddie Mac", "s": "Servicios Financieros", "v": 3.48}, {"t": "BPA11", "n": "Banco BTG Pactual", "s": "Servicios Financieros", "v": 3.45}, {"t": "TIMS3", "n": "TIM S.A.", "s": "Comunicaciones", "v": 3.44}, {"t": "IVW", "n": "iShares S&P 500 Growth", "s": "ETF", "v": 3.35}, {"t": "EWY", "n": "iShares MSCI South Korea", "s": "ETF", "v": 3.03}, {"t": "KOFM", "n": "Coca-Cola Femsa", "s": "Consumo Básico", "v": 2.93}, {"t": "KB", "n": "KB Financial Group", "s": "Servicios Financieros", "v": 2.92}, {"t": "AKO.B", "n": "Embotelladora Andina", "s": "Consumo Básico", "v": 2.91}, {"t": "CSCO", "n": "Cisco Systems", "s": "Tecnología de la Información", "v": 2.85}, {"t": "UGP", "n": "Ultrapar Participaçoes", "s": "Energía", "v": 2.55}, {"t": "WMT", "n": "Walmart Inc", "s": "Consumo Básico", "v": 2.5}, {"t": "COST", "n": "Costco Wholesale", "s": "Consumo Básico", "v": 2.49}, {"t": "XLY", "n": "Consumer Discretionary SPDR", "s": "ETF", "v": 2.48}, {"t": "JMIA", "n": "Jumia Technologies", "s": "Tecnología de la Información", "v": 2.43}, {"t": "TXN", "n": "Texas Instruments", "s": "Tecnología de la Información", "v": 2.36}, {"t": "JOYY", "n": "JOYY Inc", "s": "Tecnología de la Información", "v": 2.34}, {"t": "ABEV3", "n": "Ambev S.A. (3)", "s": "Consumo Básico", "v": 2.22}, {"t": "ABEV", "n": "Ambev S.A.", "s": "Consumo Básico", "v": 2.16}, {"t": "DEO", "n": "Diageo plc", "s": "Consumo Básico", "v": 2.1}, {"t": "XP", "n": "XP Inc", "s": "Servicios Financieros", "v": 1.93}, {"t": "TIMB", "n": "TIM Participaçoes", "s": "Comunicaciones", "v": 1.84}, {"t": "PAGS", "n": "PagSeguro Digital", "s": "Tecnología de la Información", "v": 1.8}, {"t": "MCD", "n": "McDonald's Corp", "s": "Consumo Discrecional", "v": 1.67}, {"t": "ILF", "n": "iShares Latin America 40", "s": "ETF", "v": 1.62}, {"t": "PSX", "n": "Phillips 66", "s": "Energía", "v": 1.61}, {"t": "TSLA", "n": "Tesla Inc", "s": "Industriales", "v": 1.57}, {"t": "ADI", "n": "Analog Devices", "s": "Tecnología de la Información", "v": 1.52}, {"t": "TQQQ", "n": "ProShares UltraPro QQQ", "s": "ETF", "v": 1.49}, {"t": "PYPL", "n": "PayPal Holdings", "s": "Tecnología de la Información", "v": 1.32}, {"t": "BSBR", "n": "Banco Santander Brasil", "s": "Servicios Financieros", "v": 1.12}, {"t": "RENT3", "n": "Localiza Rent a Car", "s": "Consumo Discrecional", "v": 1.04}, {"t": "EWZ", "n": "iShares MSCI Brazil", "s": "ETF", "v": 0.98}, {"t": "SHOP", "n": "Shopify Inc", "s": "Tecnología de la Información", "v": 0.73}, {"t": "SPGI", "n": "S&P Global Inc", "s": "Servicios Financieros", "v": 0.71}, {"t": "LMT", "n": "Lockheed Martin", "s": "Industriales", "v": 0.71}, {"t": "SPXL", "n": "Direxion Daily S&P500 Bull 3x", "s": "ETF", "v": 0.71}, {"t": "FCX", "n": "Freeport McMoRan", "s": "Materiales", "v": 0.68}, {"t": "EFX", "n": "Equifax Inc", "s": "Tecnología de la Información", "v": 0.13}, {"t": "ADS", "n": "Adidas AG", "s": "Consumo Discrecional", "v": 0.0}, {"t": "MBG", "n": "Daimler AG", "s": "Industriales", "v": 0.0}, {"t": "MBGB", "n": "Daimler AG (B)", "s": "Industriales", "v": 0.0}, {"t": "NSAN", "n": "Nissan Motor", "s": "Industriales", "v": 0.0}, {"t": "SIEGY", "n": "Siemens AG", "s": "Industriales", "v": 0.0}, {"t": "LREN3", "n": "Lojas Renner", "s": "Consumo Discrecional", "v": -0.11}, {"t": "IBM", "n": "Intl Business Machines", "s": "Tecnología de la Información", "v": -0.14}, {"t": "XROX", "n": "Xerox Corporation", "s": "Tecnología de la Información", "v": -0.27}, {"t": "ISRG", "n": "Intuitive Surgical", "s": "Salud", "v": -0.35}, {"t": "STNE", "n": "StoneCo Ltd", "s": "Tecnología de la Información", "v": -0.35}, {"t": "XLE", "n": "Energy Select Sector SPDR", "s": "ETF", "v": -0.43}, {"t": "DISN", "n": "Walt Disney Company", "s": "Comunicaciones", "v": -0.48}, {"t": "WBO", "n": "Weibo Corporation", "s": "Tecnología de la Información", "v": -0.57}, {"t": "MDLZ", "n": "Mondelez International", "s": "Consumo Básico", "v": -0.83}, {"t": "GILD", "n": "Gilead Sciences", "s": "Salud", "v": -0.96}, {"t": "GOOGL", "n": "Alphabet Inc. Cl. A", "s": "Comunicaciones", "v": -0.97}, {"t": "CLS", "n": "Celestica Inc", "s": "Tecnología de la Información", "v": -0.97}, {"t": "LND", "n": "BrasilAgro", "s": "Consumo Básico", "v": -0.98}, {"t": "CAAP", "n": "Corp. America Airports", "s": "Industriales", "v": -1.08}, {"t": "SUZ", "n": "Suzano Papel e Celulose", "s": "Materiales", "v": -1.15}, {"t": "URBN", "n": "Urban Outfitters", "s": "Consumo Discrecional", "v": -1.22}, {"t": "PEP", "n": "PepsiCo Inc", "s": "Consumo Básico", "v": -1.26}, {"t": "SONY", "n": "Sony Corporation", "s": "Comunicaciones", "v": -1.38}, {"t": "KEP", "n": "Korea Electric Power", "s": "Servicios Públicos", "v": -1.39}, {"t": "XOM", "n": "Exxon Mobil", "s": "Energía", "v": -1.48}, {"t": "BHP", "n": "BHP Billiton", "s": "Materiales", "v": -1.7}, {"t": "PATH", "n": "UiPath Inc", "s": "Tecnología de la Información", "v": -1.72}, {"t": "BA", "n": "Boeing Company", "s": "Industriales", "v": -1.82}, {"t": "NVDA", "n": "Nvidia Corporation", "s": "Tecnología de la Información", "v": -1.96}, {"t": "BBAS3", "n": "Banco do Brasil", "s": "Servicios Financieros", "v": -2.06}, {"t": "HUT", "n": "Hut 8 Mining", "s": "Materiales", "v": -2.38}, {"t": "SPOT", "n": "Spotify Technology", "s": "Comunicaciones", "v": -2.43}, {"t": "XLC", "n": "Communication Services SPDR", "s": "ETF", "v": -2.49}, {"t": "VALE", "n": "Vale S.A.", "s": "Materiales", "v": -2.49}, {"t": "AAPL", "n": "Apple Inc", "s": "Tecnología de la Información", "v": -2.55}, {"t": "GM", "n": "General Motors", "s": "Consumo Discrecional", "v": -2.81}, {"t": "ARCO", "n": "Arcos Dorados", "s": "Consumo Discrecional", "v": -2.87}, {"t": "PFE", "n": "Pfizer Inc", "s": "Salud", "v": -2.89}, {"t": "SHEL", "n": "Royal Dutch Shell", "s": "Energía", "v": -2.97}, {"t": "SUZB3", "n": "Suzano S.A.", "s": "Materiales", "v": -2.97}, {"t": "TJX", "n": "TJX Companies", "s": "Consumo Discrecional", "v": -3.55}, {"t": "VALE3", "n": "Vale S.A. (3)", "s": "Materiales", "v": -3.64}, {"t": "LVS", "n": "Las Vegas Sands", "s": "Consumo Discrecional", "v": -3.64}, {"t": "CX", "n": "Cemex SAB", "s": "Materiales", "v": -3.85}, {"t": "VXX", "n": "iPath S&P 500 VIX", "s": "ETF", "v": -3.85}, {"t": "ROST", "n": "Ross Stores", "s": "Consumo Discrecional", "v": -3.89}, {"t": "CRWV", "n": "CoreWeave Inc", "s": "Tecnología de la Información", "v": -3.99}, {"t": "CVX", "n": "Chevron Corp", "s": "Energía", "v": -4.21}, {"t": "TEN", "n": "Tenaris S.A.", "s": "Energía", "v": -4.21}, {"t": "SCCO", "n": "Southern Copper", "s": "Materiales", "v": -4.33}, {"t": "FNMA", "n": "Fed. National Mortgage", "s": "Servicios Financieros", "v": -4.42}, {"t": "COP", "n": "ConocoPhillips", "s": "Energía", "v": -4.43}, {"t": "NIO", "n": "NIO Inc", "s": "Industriales", "v": -4.63}, {"t": "PDD", "n": "PDD Holdings", "s": "Consumo Discrecional", "v": -4.79}, {"t": "CCJ", "n": "Cameco Corp", "s": "Energía", "v": -4.87}, {"t": "GGB", "n": "Gerdau S.A.", "s": "Materiales", "v": -4.9}, {"t": "FXI", "n": "iShares FTSE China", "s": "ETF", "v": -5.09}, {"t": "HSY", "n": "The Hershey Company", "s": "Consumo Básico", "v": -5.32}, {"t": "TMUS", "n": "T-Mobile US", "s": "Comunicaciones", "v": -5.33}, {"t": "NOKA", "n": "Nokia Corporation", "s": "Tecnología de la Información", "v": -5.62}, {"t": "EQNR", "n": "Equinor ASA", "s": "Energía", "v": -5.65}, {"t": "E", "n": "Eni SpA", "s": "Energía", "v": -5.84}, {"t": "NKE", "n": "Nike Inc", "s": "Consumo Discrecional", "v": -6.21}, {"t": "GPRK", "n": "GeoPark Ltd", "s": "Industriales", "v": -6.27}, {"t": "META", "n": "Meta Platforms", "s": "Tecnología de la Información", "v": -6.29}, {"t": "TTE", "n": "TotalEnergies SE", "s": "Energía", "v": -6.33}, {"t": "NUE", "n": "Nucor Corp", "s": "Materiales", "v": -6.34}, {"t": "RIO", "n": "Rio Tinto", "s": "Materiales", "v": -6.38}, {"t": "MOS", "n": "The Mosaic Co", "s": "Materiales", "v": -6.44}, {"t": "TXR", "n": "Ternium S.A.", "s": "Materiales", "v": -6.51}, {"t": "VOD", "n": "Vodafone Group", "s": "Comunicaciones", "v": -6.68}, {"t": "GLD", "n": "SPDR Gold Trust", "s": "ETF", "v": -6.86}, {"t": "VZ", "n": "Verizon Communications", "s": "Comunicaciones", "v": -6.87}, {"t": "TM", "n": "Toyota Motor Corp", "s": "Industriales", "v": -6.91}, {"t": "SWKS", "n": "Skyworks Solutions", "s": "Tecnología de la Información", "v": -6.97}, {"t": "AMZN", "n": "Amazon.com", "s": "Consumo Discrecional", "v": -6.99}, {"t": "BP", "n": "BP p.l.c.", "s": "Energía", "v": -7.03}, {"t": "JD", "n": "JD.com", "s": "Consumo Discrecional", "v": -7.15}, {"t": "VRSN", "n": "VeriSign Inc", "s": "Tecnología de la Información", "v": -7.52}, {"t": "HL", "n": "Hecla Mining", "s": "Materiales", "v": -7.82}, {"t": "MP", "n": "MP Materials", "s": "Materiales", "v": -7.87}, {"t": "COPX", "n": "Global X Copper Miners", "s": "ETF", "v": -8.02}, {"t": "ICLN", "n": "iShares Global Clean Energy", "s": "ETF", "v": -8.08}, {"t": "DECK", "n": "Deckers Outdoor", "s": "Consumo Discrecional", "v": -8.08}, {"t": "HAL", "n": "Halliburton", "s": "Energía", "v": -8.18}, {"t": "BNG", "n": "Bunge Limited", "s": "Consumo Básico", "v": -8.81}, {"t": "URA", "n": "Global X Uranium ETF", "s": "ETF", "v": -8.86}, {"t": "PETR3", "n": "Petrobras (3)", "s": "Energía", "v": -8.91}, {"t": "FISV", "n": "Fiserv Inc", "s": "Tecnología de la Información", "v": -8.94}, {"t": "VIST", "n": "Vista Oil & Gas", "s": "Energía", "v": -9.21}, {"t": "CEG", "n": "Constellation Energy", "s": "Servicios Públicos", "v": -9.22}, {"t": "B", "n": "Barrick Mining", "s": "Materiales", "v": -9.24}, {"t": "OXY", "n": "Occidental Petroleum", "s": "Energía", "v": -9.25}, {"t": "PBR", "n": "Petroleo Brasileiro", "s": "Energía", "v": -9.28}, {"t": "XME", "n": "SPDR S&P Metals & Mining", "s": "ETF", "v": -9.91}, {"t": "ERIC", "n": "L.M. Ericsson Telephone", "s": "Tecnología de la Información", "v": -10.05}, {"t": "AVGO", "n": "Broadcom Inc", "s": "Tecnología de la Información", "v": -10.12}, {"t": "SLB", "n": "Schlumberger", "s": "Energía", "v": -10.26}, {"t": "BKR", "n": "Baker Hughes", "s": "Energía", "v": -10.4}, {"t": "CDE", "n": "Coeur d'Alene Mines", "s": "Materiales", "v": -10.44}, {"t": "NEM", "n": "Newmont Mining", "s": "Materiales", "v": -10.46}, {"t": "AI", "n": "C3.ai Inc", "s": "Tecnología de la Información", "v": -10.48}, {"t": "CAR", "n": "Avis Budget Group", "s": "Industriales", "v": -10.48}, {"t": "ZM", "n": "Zoom Communications", "s": "Tecnología de la Información", "v": -10.56}, {"t": "DOCU", "n": "DocuSign Inc", "s": "Tecnología de la Información", "v": -10.91}, {"t": "GDX", "n": "VanEck Gold Miners", "s": "ETF", "v": -11.09}, {"t": "SAP", "n": "SAP SE", "s": "Tecnología de la Información", "v": -11.17}, {"t": "BIDU", "n": "Baidu Inc", "s": "Comunicaciones", "v": -11.17}, {"t": "HAPV3", "n": "Hapvida Participações", "s": "Salud", "v": -11.32}, {"t": "AEM", "n": "Agnico Eagle Mines", "s": "Materiales", "v": -11.44}, {"t": "GFI", "n": "Gold Fields Ltd", "s": "Materiales", "v": -11.58}, {"t": "TCOM", "n": "Trip.com International", "s": "Comunicaciones", "v": -11.73}, {"t": "T", "n": "AT&T Inc", "s": "Comunicaciones", "v": -11.87}, {"t": "NFLX", "n": "Netflix", "s": "Comunicaciones", "v": -12.16}, {"t": "MSFT", "n": "Microsoft Corp", "s": "Tecnología de la Información", "v": -12.2}, {"t": "INFY", "n": "Infosys Limited", "s": "Tecnología de la Información", "v": -12.33}, {"t": "HMY", "n": "Harmony Gold", "s": "Materiales", "v": -12.54}, {"t": "MUX", "n": "McEwen Mining", "s": "Materiales", "v": -12.82}, {"t": "USO", "n": "United States Oil Fund", "s": "ETF", "v": -13.12}, {"t": "PRIO3", "n": "Petro Rio", "s": "Energía", "v": -13.21}, {"t": "CRM", "n": "Salesforce Inc", "s": "Tecnología de la Información", "v": -13.58}, {"t": "BIOX", "n": "Bioceres Crop Solutions", "s": "Materiales", "v": -14.62}, {"t": "DOW", "n": "Dow Inc", "s": "Materiales", "v": -14.71}, {"t": "HPQ", "n": "HP Inc", "s": "Tecnología de la Información", "v": -15.16}, {"t": "NOW", "n": "ServiceNow Inc", "s": "Tecnología de la Información", "v": -15.61}, {"t": "XPEV", "n": "XPeng Inc", "s": "Industriales", "v": -15.74}, {"t": "IBIT", "n": "iShares Bitcoin Trust", "s": "ETF", "v": -15.83}, {"t": "LAR", "n": "Lithium Argentina", "s": "Consumo Discrecional", "v": -15.9}, {"t": "F", "n": "Ford Motor Co", "s": "Consumo Discrecional", "v": -16.73}, {"t": "ADBE", "n": "Adobe Systems", "s": "Tecnología de la Información", "v": -16.73}, {"t": "NXE", "n": "NexGen Energy", "s": "Materiales", "v": -16.85}, {"t": "ADGO", "n": "Adecoagro S.A.", "s": "Consumo Básico", "v": -17.18}, {"t": "PAAS", "n": "Pan American Silver", "s": "Materiales", "v": -17.37}, {"t": "ETHA", "n": "iShares Ethereum Trust", "s": "ETF", "v": -17.45}, {"t": "ASTS", "n": "AST SpaceMobile", "s": "Comunicaciones", "v": -17.61}, {"t": "SLV", "n": "iShares Silver Trust", "s": "ETF", "v": -17.68}, {"t": "NATU3", "n": "Natura Cosmeticos", "s": "Consumo Básico", "v": -17.79}, {"t": "KGC", "n": "Kinross Gold", "s": "Materiales", "v": -17.93}, {"t": "OKLO", "n": "Oklo Inc", "s": "Servicios Públicos", "v": -17.98}, {"t": "FSLR", "n": "First Solar", "s": "Energía", "v": -18.0}, {"t": "SNAP", "n": "Snap Inc", "s": "Comunicaciones", "v": -18.64}, {"t": "BABA", "n": "Alibaba Group", "s": "Consumo Discrecional", "v": -18.65}, {"t": "COIN", "n": "Coinbase Global", "s": "Servicios Financieros", "v": -18.65}, {"t": "RGTI", "n": "Rigetti Computing", "s": "Tecnología de la Información", "v": -19.92}, {"t": "FDX", "n": "Federal Express", "s": "Industriales", "v": -20.1}, {"t": "MGLU3", "n": "Magazine Luiza", "s": "Consumo Discrecional", "v": -20.32}, {"t": "PLTR", "n": "Palantir Technologies", "s": "Tecnología de la Información", "v": -21.08}, {"t": "LAC", "n": "Lithium Americas", "s": "Materiales", "v": -21.42}, {"t": "QCOM", "n": "Qualcomm Inc", "s": "Tecnología de la Información", "v": -22.23}, {"t": "TEAM", "n": "Atlassian Corporation", "s": "Tecnología de la Información", "v": -23.37}, {"t": "IREN", "n": "Iren Ltd", "s": "Tecnología de la Información", "v": -23.46}, {"t": "GLOB", "n": "Globant S.A.", "s": "Tecnología de la Información", "v": -24.13}, {"t": "RKLB", "n": "Rocket Lab Corp", "s": "Industriales", "v": -24.52}, {"t": "STLA", "n": "Stellantis NV", "s": "Industriales", "v": -24.96}, {"t": "NG", "n": "Novagold Resources", "s": "Energía", "v": -25.51}, {"t": "BMNR", "n": "Bitmine Immersion Tech", "s": "Tecnología de la Información", "v": -26.73}, {"t": "CSNA3", "n": "Cia Siderurgica Nacional (3)", "s": "Materiales", "v": -28.02}, {"t": "SID", "n": "Cia Siderurgica Nacional", "s": "Materiales", "v": -28.06}, {"t": "ACN", "n": "Accenture plc", "s": "Tecnología de la Información", "v": -30.03}, {"t": "ORCL", "n": "Oracle Corporation", "s": "Tecnología de la Información", "v": -30.92}, {"t": "ONDS", "n": "Ondas Holdings", "s": "Industriales", "v": -34.75}, {"t": "SATL", "n": "Satellogic Inc", "s": "Energía", "v": -35.71}, {"t": "BAK", "n": "Braskem SA", "s": "Materiales", "v": -38.05}, {"t": "MSTR", "n": "MicroStrategy Inc", "s": "Tecnología de la Información", "v": -42.43}, {"t": "SPCE", "n": "Virgin Galactic", "s": "Industriales", "v": -52.1}];
+
+stocks.sort((a,b)=>b.v-a.v);
+
+const sectorData = [
+{s:'Salud',v:13.70},
+{s:'Servicios Financieros',v:8.18},
+{s:'Tecnología de la Información',v:3.24},
+{s:'Consumo Básico',v:2.49},
+{s:'Industriales',v:2.32},
+{s:'ETF',v:1.97},
+{s:'Comunicaciones',v:0.61},
+{s:'Servicios Públicos',v:-0.09},
+{s:'Consumo Discrecional',v:-0.22},
+{s:'Materiales',v:-2.58},
+{s:'Energía',v:-7.55}
+];
+sectorData.sort((a,b)=>b.v-a.v);
+
+const styles = getComputedStyle(document.documentElement);
+const green = styles.getPropertyValue('--green').trim() || '#008300';
+const red = styles.getPropertyValue('--red').trim() || '#e34948';
+const muted = styles.getPropertyValue('--text-muted').trim() || '#898781';
+
+new Chart(document.getElementById('sectorChart'), {
+  type: 'bar',
+  data: {
+    labels: sectorData.map(d=>d.s),
+    datasets: [{
+      data: sectorData.map(d=>d.v),
+      backgroundColor: sectorData.map(d=>d.v>=0?green:red),
+      borderRadius: 4,
+      barThickness: 16
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { left: 4, right: 40 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (ctx) => (ctx.raw>0?'+':'') + ctx.raw.toFixed(2) + '%' } }
+    },
+    scales: {
+      x: { grid: { color: '#e1e0d9' }, ticks: { color: muted, font: { size: 11 }, callback: (v)=> (v>0?'+':'')+v+'%' } },
+      y: { grid: { display: false }, ticks: { color: muted, font: { size: 11 } } }
+    }
+  },
+  plugins: [{
+    id: 'valueLabels',
+    afterDatasetsDraw(chart) {
+      const {ctx} = chart;
+      chart.data.datasets[0].data.forEach((val, i) => {
+        const meta = chart.getDatasetMeta(0).data[i];
+        ctx.save();
+        ctx.font = '500 12px sans-serif';
+        ctx.fillStyle = val>=0 ? green : red;
+        ctx.textBaseline = 'middle';
+        if (val>=0) { ctx.textAlign = 'left'; ctx.fillText((val>0?'+':'')+val.toFixed(2)+'%', meta.x+6, meta.y); }
+        else { ctx.textAlign = 'right'; ctx.fillText(val.toFixed(2)+'%', meta.x-6, meta.y); }
+        ctx.restore();
+      });
+    }
+  }]
+});
+
+const sectorSet = [...new Set(stocks.map(d=>d.s))].sort();
+const filterEl = document.getElementById('sectorFilter');
+sectorSet.forEach(s=>{
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  filterEl.appendChild(opt);
+});
+
+const maxAbs = Math.max(...stocks.map(d=>Math.abs(d.v)));
+let currentFilter = 'all';
+let currentSearch = '';
+
+function renderList(){
+  const list = document.getElementById('stockList');
+  list.innerHTML = '';
+  let items = currentFilter==='all' ? stocks : stocks.filter(d=>d.s===currentFilter);
+  if(currentSearch){
+    const q = currentSearch.toLowerCase();
+    items = items.filter(d=>d.t.toLowerCase().includes(q) || d.n.toLowerCase().includes(q));
+  }
+  items.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className = 'stock-row';
+    const pos = d.v>=0;
+    const barWidth = Math.abs(d.v)/maxAbs*45;
+    row.innerHTML =
+      '<span class="rank">'+(i+1)+'</span>'+
+      '<span class="ticker">'+d.t+'</span>'+
+      '<span class="name">'+d.n+'</span>'+
+      '<span class="sector-tag">'+d.s+'</span>'+
+      '<span class="bar-wrap">'+
+        '<span class="bar-axis"></span>'+
+        '<span class="bar-fill" style="'+(pos?'left:50%':'right:50%')+';width:'+barWidth+'px;background:'+(pos?green:red)+'"></span>'+
+      '</span>'+
+      '<span class="value" style="color:'+(pos?green:red)+'">'+
+        '<span class="arrow">'+(pos?'▲':'▼')+'</span>'+(pos?'+':'')+d.v.toFixed(2)+'%</span>';
+    list.appendChild(row);
+  });
+}
+renderList();
+filterEl.addEventListener('change', (e)=>{ currentFilter = e.target.value; renderList(); });
+document.getElementById('searchBox').addEventListener('input', (e)=>{ currentSearch = e.target.value; renderList(); });
+</script>
+</body>
+</html>
