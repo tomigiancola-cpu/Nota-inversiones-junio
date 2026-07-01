@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel líder S&P Merval — Variación mensual 29-May al 30-Jun-26</title>
+<style>
+  :root{
+    --surface-2:#ffffff;
+    --surface-1:#f7f6f3;
+    --surface-0:#f1efe8;
+    --text-primary:#0b0b0b;
+    --text-secondary:#52514e;
+    --text-muted:#898781;
+    --border:rgba(11,11,11,0.10);
+    --border-strong:rgba(11,11,11,0.25);
+    --green:#008300;
+    --red:#e34948;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-voice: Georgia, "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --surface-2:#1a1a19;
+      --surface-1:#242423;
+      --surface-0:#141413;
+      --text-primary:#ffffff;
+      --text-secondary:#c3c2b7;
+      --text-muted:#898781;
+      --border:rgba(255,255,255,0.10);
+      --border-strong:rgba(255,255,255,0.25);
+      --green:#3fb63f;
+      --red:#e66767;
+    }
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--surface-0);
+    font-family:var(--font-sans);
+    color:var(--text-primary);
+    display:flex;
+    justify-content:center;
+    padding:32px 16px;
+  }
+  .card{
+    width:100%;
+    max-width:680px;
+    background:var(--surface-2);
+    border:0.5px solid var(--border);
+    border-radius:12px;
+    padding:1.5rem 1.75rem 1.75rem;
+  }
+  h1{
+    font-size:20px;
+    font-weight:500;
+    margin:0 0 2px;
+  }
+  .subtitle{
+    font-size:12px;
+    color:var(--text-muted);
+    margin:0 0 20px;
+  }
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:12px;
+    margin-bottom:1.75rem;
+  }
+  .kpi-card{
+    background:var(--surface-1);
+    border-radius:8px;
+    padding:1rem;
+  }
+  .kpi-label{
+    font-size:12px;
+    color:var(--text-secondary);
+  }
+  .kpi-value{
+    font-family:var(--font-voice);
+    font-size:26px;
+    margin-top:2px;
+  }
+  .kpi-sub{
+    font-size:12px;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+  .row-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .row-header span:first-child{
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-secondary);
+  }
+  .row-header span:last-child{
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  select{
+    width:auto;
+    font-size:12px;
+    height:28px;
+    padding:0 8px;
+    border-radius:6px;
+    border:0.5px solid var(--border-strong);
+    background:var(--surface-2);
+    color:var(--text-primary);
+  }
+  #stockList{margin-top:2px}
+  .stock-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 4px;
+    border-top:0.5px solid var(--border);
+  }
+  .rank{width:18px;font-size:11px;color:var(--text-muted);text-align:right}
+  .ticker{width:52px;font-size:13px;font-weight:500}
+  .name{flex:1;font-size:12px;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sector-tag{width:120px;font-size:11px;color:var(--text-muted);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-wrap{width:110px;display:flex;align-items:center;justify-content:center;height:10px;position:relative}
+  .bar-axis{position:absolute;left:50%;width:1px;height:10px;background:var(--border-strong)}
+  .bar-fill{position:absolute;height:6px;border-radius:3px}
+  .value{width:70px;text-align:right;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:flex-end;gap:2px}
+  .arrow{font-size:12px}
+  .footer{margin-top:16px;font-size:11px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Panel líder S&amp;P Merval</h1>
+  <p class="subtitle">Variación mensual, 29-May-26 → 30-Jun-26</p>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor sector</div>
+      <div class="kpi-value" style="color:var(--green)">+6,6%</div>
+      <div class="kpi-sub">Servicios financieros</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor sector</div>
+      <div class="kpi-value" style="color:var(--red)">-7,1%</div>
+      <div class="kpi-sub">Energía</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Mejor acción</div>
+      <div class="kpi-value" style="color:var(--green)">+12,7%</div>
+      <div class="kpi-sub">BBAR · BBVA Argentina</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Peor acción</div>
+      <div class="kpi-value" style="color:var(--red)">-15,1%</div>
+      <div class="kpi-sub">COME · Comercial del Plata</div>
+    </div>
+  </div>
+
+  <div class="row-header">
+    <span>Variación sectorial ponderada por capitalización</span>
+  </div>
+  <div style="position:relative;width:100%;height:230px;margin-bottom:2rem">
+    <canvas id="sectorChart" role="img" aria-label="Gráfico de barras divergente mostrando la variación mensual ponderada de los 5 sectores del panel líder: servicios financieros +6,58%, consumo básico -0,79%, servicios públicos -2,40%, materiales -2,85%, energía -7,10%">Servicios financieros +6,58%, Consumo básico -0,79%, Servicios públicos -2,40%, Materiales -2,85%, Energía -7,10%.</canvas>
+  </div>
+
+  <div class="row-header">
+    <span>Ranking de las 20 acciones del panel líder</span>
+    <select id="sectorFilter">
+      <option value="all">Todos los sectores</option>
+    </select>
+  </div>
+  <div id="stockList"></div>
+
+  <p class="footer">Variación del cierre 29-May-26 al cierre 30-Jun-26. Sectores ponderados por capitalización de mercado al 30-Jun-26. Fuente: informes diarios de acciones IAMC / BYMA.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const stocks = [
+{t:'BBAR',n:'Banco BBVA Argentina',s:'Servicios financieros',v:12.67},
+{t:'BMA',n:'Banco Macro',s:'Servicios financieros',v:7.42},
+{t:'BYMA',n:'Bolsas y Mercados Argentinos',s:'Servicios financieros',v:4.38},
+{t:'SUPV',n:'Grupo Supervielle',s:'Servicios financieros',v:4.51},
+{t:'GGAL',n:'Grupo Financiero Galicia',s:'Servicios financieros',v:3.94},
+{t:'VALO',n:'Banco de Valores',s:'Servicios financieros',v:0.37},
+{t:'TGSU2',n:'Transp. de Gas del Sur',s:'Energía',v:1.26},
+{t:'PAMP',n:'Pampa Energía',s:'Servicios públicos',v:0.79},
+{t:'SAMI',n:'San Miguel',s:'Consumo básico',v:0.58},
+{t:'LOMA',n:'Loma Negra',s:'Materiales',v:0.42},
+{t:'CRES',n:'Cresud',s:'Consumo básico',v:-0.79},
+{t:'CEPU',n:'Central Puerto',s:'Servicios públicos',v:-2.08},
+{t:'ECOG',n:'Inversora Gas del Centro',s:'Servicios públicos',v:-5.00},
+{t:'EDN',n:'Edenor',s:'Servicios públicos',v:-5.29},
+{t:'TGNO4',n:'Transp. de Gas del Norte',s:'Energía',v:-5.22},
+{t:'TXAR',n:'Ternium Argentina',s:'Materiales',v:-4.33},
+{t:'ALUA',n:'Aluar Aluminio',s:'Materiales',v:-3.73},
+{t:'TRAN',n:'Transener',s:'Servicios públicos',v:-7.06},
+{t:'YPFD',n:'YPF',s:'Energía',v:-9.22},
+{t:'METR',n:'Metrogas',s:'Servicios públicos',v:-10.39},
+{t:'COME',n:'Sociedad Comercial del Plata',s:'Energía',v:-15.07}
+];
+stocks.sort((a,b)=>b.v-a.v);
+
+const sectorData = [
+{s:'Servicios financieros',v:6.58},
+{s:'Consumo básico',v:-0.79},
+{s:'Servicios públicos',v:-2.40},
+{s:'Materiales',v:-2.85},
+{s:'Energía',v:-7.10}
+];
+sectorData.sort((a,b)=>b.v-a.v);
+
+const styles = getComputedStyle(document.documentElement);
+const green = styles.getPropertyValue('--green').trim() || '#008300';
+const red = styles.getPropertyValue('--red').trim() || '#e34948';
+const muted = styles.getPropertyValue('--text-muted').trim() || '#898781';
+
+new Chart(document.getElementById('sectorChart'), {
+  type: 'bar',
+  data: {
+    labels: sectorData.map(d=>d.s),
+    datasets: [{
+      data: sectorData.map(d=>d.v),
+      backgroundColor: sectorData.map(d=>d.v>=0?green:red),
+      borderRadius: 4,
+      barThickness: 22
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    layout: { padding: { left: 4, right: 40 } },
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: (ctx) => (ctx.raw>0?'+':'') + ctx.raw.toFixed(2) + '%' } }
+    },
+    scales: {
+      x: { grid: { color: '#e1e0d9' }, ticks: { color: muted, font: { size: 11 }, callback: (v)=> (v>0?'+':'')+v+'%' } },
+      y: { grid: { display: false }, ticks: { color: muted, font: { size: 12 } } }
+    }
+  },
+  plugins: [{
+    id: 'valueLabels',
+    afterDatasetsDraw(chart) {
+      const {ctx} = chart;
+      chart.data.datasets[0].data.forEach((val, i) => {
+        const meta = chart.getDatasetMeta(0).data[i];
+        ctx.save();
+        ctx.font = '500 12px sans-serif';
+        ctx.fillStyle = val>=0 ? green : red;
+        ctx.textBaseline = 'middle';
+        if (val>=0) { ctx.textAlign = 'left'; ctx.fillText((val>0?'+':'')+val.toFixed(2)+'%', meta.x+6, meta.y); }
+        else { ctx.textAlign = 'right'; ctx.fillText(val.toFixed(2)+'%', meta.x-6, meta.y); }
+        ctx.restore();
+      });
+    }
+  }]
+});
+
+const sectorSet = [...new Set(stocks.map(d=>d.s))];
+const filterEl = document.getElementById('sectorFilter');
+sectorSet.forEach(s=>{
+  const opt = document.createElement('option');
+  opt.value = s; opt.textContent = s;
+  filterEl.appendChild(opt);
+});
+
+const maxAbs = Math.max(...stocks.map(d=>Math.abs(d.v)));
+
+function renderList(filter){
+  const list = document.getElementById('stockList');
+  list.innerHTML = '';
+  const items = filter==='all' ? stocks : stocks.filter(d=>d.s===filter);
+  items.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className = 'stock-row';
+    const pos = d.v>=0;
+    const barWidth = Math.abs(d.v)/maxAbs*50;
+    row.innerHTML =
+      '<span class="rank">'+(i+1)+'</span>'+
+      '<span class="ticker">'+d.t+'</span>'+
+      '<span class="name">'+d.n+'</span>'+
+      '<span class="sector-tag">'+d.s+'</span>'+
+      '<span class="bar-wrap">'+
+        '<span class="bar-axis"></span>'+
+        '<span class="bar-fill" style="'+(pos?'left:50%':'right:50%')+';width:'+barWidth+'px;background:'+(pos?green:red)+'"></span>'+
+      '</span>'+
+      '<span class="value" style="color:'+(pos?green:red)+'">'+
+        '<span class="arrow">'+(pos?'▲':'▼')+'</span>'+(pos?'+':'')+d.v.toFixed(2)+'%</span>';
+    list.appendChild(row);
+  });
+}
+renderList('all');
+filterEl.addEventListener('change', (e)=>renderList(e.target.value));
+</script>
+</body>
+</html>
