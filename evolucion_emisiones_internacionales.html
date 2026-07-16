@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Evolución de emisiones internacionales</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    margin: 0;
+    padding: 24px 32px 16px 32px;
+  }
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 4px 0;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 18px;
+  }
+  #chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 560px;
+  }
+  .footer {
+    text-align: right;
+    font-size: 12px;
+    color: #777;
+    margin-top: 6px;
+    padding-right: 10px;
+  }
+  .note {
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+    padding-right: 10px;
+    text-align: right;
+  }
+  .toggle-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .toggle-btn {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    padding: 6px 18px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+  }
+  .toggle-btn.active {
+    background: #2a78d6;
+    border-color: #2a78d6;
+    color: #fff;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<h1>Evolución de emisiones internacionales</h1>
+<div class="subtitle">Montos emitidos (US$ m) — mercado local, mercado internacional y provincias</div>
+
+<div class="toggle-wrap">
+  <button id="btn-monthly" class="toggle-btn active">Mensual</button>
+  <button id="btn-yearly" class="toggle-btn">Anual</button>
+</div>
+
+<div id="chart-wrap">
+  <canvas id="chart" role="img" aria-label="Barras apiladas de montos emitidos mensuales por mercado local, internacional y provincias, con el total encima de cada barra"></canvas>
+</div>
+
+<div class="footer">Fuente: PPI</div>
+<div class="note">El desglose por segmento (local / internacional / provincias) es una estimación obtenida por análisis de la imagen original; el total de cada barra coincide con el valor publicado.</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const labels = ['ene.-23','feb.-23','mar.-23','abr.-23','may.-23','jun.-23','jul.-23','ago.-23','sep.-23','oct.-23','nov.-23','dic.-23',
+'ene.-24','feb.-24','mar.-24','abr.-24','may.-24','jun.-24','jul.-24','ago.-24','sep.-24','oct.-24','nov.-24','dic.-24',
+'ene.-25','feb.-25','mar.-25','abr.-25','may.-25','jun.-25','jul.-25','ago.-25','sep.-25','oct.-25','nov.-25','dic.-25',
+'ene.-26','feb.-26','mar.-26','abr.-26','may.-26','jun.-26','jul.-26'];
+
+const local =   [35,0,0,0,5,317,0,0,106,126,0,0,55,15,256,296,206,65,55,146,216,1101,749,266,508,709,296,196,658,296,930,698,45,769,608,417,387,769,256,347,980,447,427];
+const intl  =   [0,0,0,0,0,0,0,60,0,0,0,0,704,0,0,322,0,0,201,30,814,1427,0,1266,1407,0,211,0,1497,1015,312,0,0,1146,2312,553,1628,50,0,1025,673,784,251];
+const prov  =   [70,30,75,77,15,69,76,0,70,79,34,18,81,82,74,81,75,72,0,855,80,82,72,83,96,77,79,71,83,86,747,76,74,93,626,817,1086,347,81,678,516,79,87];
+
+const yearLabels = ['2023','2024','2025','2026 (ene-jul)'];
+const yearRanges = [[0,12],[12,24],[24,36],[36,43]];
+function sumRange(arr,a,b){ return arr.slice(a,b).reduce((s,v)=>s+v,0); }
+const yearLocal = yearRanges.map(([a,b])=>sumRange(local,a,b));
+const yearIntl  = yearRanges.map(([a,b])=>sumRange(intl,a,b));
+const yearProv  = yearRanges.map(([a,b])=>sumRange(prov,a,b));
+
+const colorLocal = '#2a78d6';
+const colorIntl  = '#b9b9b9';
+const colorProv  = '#4d4d4d';
+
+function makeTotals(l,i,p){ return l.map((v,idx)=>v+i[idx]+p[idx]); }
+
+const totalLabelPlugin = {
+  id: 'totalLabelPlugin',
+  afterDatasetsDraw(chart) {
+    const totals = chart.config._totals;
+    const {ctx, scales: {x, y}} = chart;
+    ctx.save();
+    ctx.font = '600 11px Arial';
+    ctx.fillStyle = '#1a1a1a';
+    ctx.textAlign = 'center';
+    totals.forEach((t, i) => {
+      const xPos = x.getPixelForValue(i);
+      const yPos = y.getPixelForValue(t) - 6;
+      ctx.fillText(new Intl.NumberFormat('es-AR').format(t), xPos, yPos);
+    });
+    ctx.restore();
+  }
+};
+
+const ctx = document.getElementById('chart');
+let chart;
+
+function buildChart(view) {
+  const isYear = view === 'yearly';
+  const lbls = isYear ? yearLabels : labels;
+  const l = isYear ? yearLocal : local;
+  const i = isYear ? yearIntl : intl;
+  const p = isYear ? yearProv : prov;
+  const totals = makeTotals(l,i,p);
+
+  if (chart) chart.destroy();
+  chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: lbls,
+      datasets: [
+        { label: 'Mercado local', data: l, backgroundColor: colorLocal, stack: 's', maxBarThickness: isYear ? 90 : 16 },
+        { label: 'Mercado internacional', data: i, backgroundColor: colorIntl, stack: 's', maxBarThickness: isYear ? 90 : 16 },
+        { label: 'Provincias', data: p, backgroundColor: colorProv, stack: 's', maxBarThickness: isYear ? 90 : 16 }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      layout: { padding: { top: 24 } },
+      plugins: {
+        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 12 } } },
+        tooltip: {
+          callbacks: {
+            label: c => c.dataset.label + ': US$ ' + new Intl.NumberFormat('es-AR').format(Math.round(c.parsed.y)) + ' m'
+          }
+        }
+      },
+      scales: {
+        x: { stacked: true, ticks: { autoSkip: false, maxRotation: isYear ? 0 : 90, minRotation: isYear ? 0 : 90, font: { size: isYear ? 12 : 10 } }, grid: { display: false } },
+        y: { stacked: true, ticks: { callback: v => new Intl.NumberFormat('es-AR').format(v) }, grid: { color: 'rgba(0,0,0,0.06)' } }
+      }
+    },
+    plugins: [totalLabelPlugin]
+  });
+  chart.config._totals = totals;
+}
+
+buildChart('monthly');
+
+document.getElementById('btn-monthly').addEventListener('click', () => {
+  buildChart('monthly');
+  document.getElementById('btn-monthly').classList.add('active');
+  document.getElementById('btn-yearly').classList.remove('active');
+});
+document.getElementById('btn-yearly').addEventListener('click', () => {
+  buildChart('yearly');
+  document.getElementById('btn-yearly').classList.add('active');
+  document.getElementById('btn-monthly').classList.remove('active');
+});
+</script>
+
+</body>
+</html>

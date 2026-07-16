@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riesgo País Argentina — EMBI+ con clasificaciones MSCI</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8f8f6;
+    color: #1a1a1a;
+    padding: 0;
+  }
+
+  .widget {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 28px 32px 24px;
+    max-width: 860px;
+    margin: 0 auto;
+    border: 1px solid #e8e6e0;
+  }
+
+  .header { margin-bottom: 20px; }
+
+  .header h1 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111;
+    margin-bottom: 4px;
+    letter-spacing: -0.2px;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: #888;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: #f8f8f6;
+    border-radius: 8px;
+    border: 1px solid #ebebeb;
+    align-items: center;
+  }
+
+  .legend-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #555;
+  }
+
+  .legend-swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Chart area */
+  .chart-area {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    margin-bottom: 8px;
+  }
+
+  /* President strip — now interactive */
+  .pres-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .pres-strip {
+    display: flex;
+    width: 100%;
+    height: 34px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1px solid #e0deda;
+  }
+
+  .pres-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 6px;
+    min-width: 0;
+    letter-spacing: 0.1px;
+    cursor: pointer;
+    transition: filter 0.15s, opacity 0.15s;
+    border: none;
+    background: none;
+    font-family: inherit;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .pres-seg:hover {
+    filter: brightness(1.15);
+    opacity: 0.95;
+  }
+
+  .pres-seg.active {
+    outline: 3px solid rgba(255,255,255,0.7);
+    outline-offset: -3px;
+    filter: brightness(1.1);
+    z-index: 1;
+  }
+
+  .pres-seg.inactive {
+    opacity: 0.45;
+  }
+
+  /* Pills (MSCI zoom) */
+  .pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .pills-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 2px;
+  }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: none;
+    transition: opacity 0.15s, transform 0.1s;
+    font-family: inherit;
+    line-height: 1;
+  }
+
+  .pill:hover { opacity: 0.75; transform: scale(0.98); }
+  .pill:active { transform: scale(0.95); }
+  .pill.active {
+    box-shadow: inset 0 0 0 1px currentColor;
+    opacity: 1 !important;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #f0efeb;
+    margin: 14px 0;
+  }
+
+  /* Tooltip */
+  .tt {
+    position: fixed;
+    background: #fff;
+    border: 1px solid #e0deda;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    pointer-events: none;
+    display: none;
+    z-index: 9999;
+    min-width: 180px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  }
+
+  .tt-year { font-size: 11px; color: #aaa; margin-bottom: 2px; }
+  .tt-val { font-size: 20px; font-weight: 700; color: #111; line-height: 1.1; }
+  .tt-unit { font-size: 11px; color: #aaa; }
+  .tt-divider { border: none; border-top: 1px solid #ebebeb; margin: 8px 0; }
+  .tt-row { font-size: 12px; margin-bottom: 2px; }
+  .tt-muted { color: #888; }
+
+  /* Source */
+  .source {
+    font-size: 11px;
+    color: #bbb;
+    margin-top: 14px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+<div class="widget">
+
+  <div class="header">
+    <h1>Riesgo país Argentina</h1>
+  </div>
+
+  <!-- Legend MSCI -->
+  <div class="legend">
+    <span class="legend-label">MSCI</span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:#3266ad;opacity:0.5;"></span>
+      Emergente (1992–2009)
+    </span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:#d4830a;opacity:0.5;"></span>
+      Frontera (2009–2018)
+    </span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:#1d9e75;opacity:0.55;"></span>
+      Emergente (2019–2021)
+    </span>
+    <span class="legend-item">
+      <span class="legend-swatch" style="background:#c0392b;opacity:0.5;"></span>
+      Standalone (2021–hoy)
+    </span>
+  </div>
+
+  <!-- Chart -->
+  <div class="chart-area">
+    <canvas id="chart" role="img"
+      aria-label="Gráfico de línea del riesgo país Argentina 1998-2026.">
+      Datos históricos del EMBI+ Argentina, JP Morgan, 1998-2026.
+    </canvas>
+  </div>
+
+  <!-- President strip (interactive) -->
+  <p class="pres-label">Presidentes — clic para hacer zoom</p>
+  <div class="pres-strip" id="pres-strip"></div>
+
+  <hr class="divider">
+
+  <!-- MSCI zoom pills -->
+  <div class="pills-row">
+    <span class="pills-label">MSCI</span>
+    <button class="pill" id="pill-all"
+      style="background:#f0f0ee;color:#555;border-color:#ddd;">
+      Todo el período
+    </button>
+    <button class="pill" id="pill-em1"
+      style="background:rgba(50,102,173,0.10);color:#185FA5;border-color:rgba(50,102,173,0.30);">
+      Emergente 1998–2009
+    </button>
+    <button class="pill" id="pill-fr"
+      style="background:rgba(212,131,10,0.10);color:#93580A;border-color:rgba(212,131,10,0.30);">
+      Frontera 2009–2018
+    </button>
+    <button class="pill" id="pill-em2"
+      style="background:rgba(29,158,117,0.10);color:#0F6E56;border-color:rgba(29,158,117,0.30);">
+      Emergente 2019–2021
+    </button>
+    <button class="pill" id="pill-sa"
+      style="background:rgba(192,57,43,0.10);color:#922B21;border-color:rgba(192,57,43,0.30);">
+      Standalone 2021–hoy
+    </button>
+  </div>
+
+  <p class="source">Fuente: JP Morgan EMBI+ · Clasificaciones: MSCI · Elaboración propia</p>
+</div>
+
+<!-- Tooltip -->
+<div class="tt" id="tt">
+  <div class="tt-year" id="tt-year"></div>
+  <div class="tt-val"  id="tt-val"></div>
+  <div class="tt-unit">puntos básicos (pb)</div>
+  <hr class="tt-divider">
+  <div class="tt-row"       id="tt-msci"></div>
+  <div class="tt-row tt-muted" id="tt-pres"></div>
+</div>
+
+<script>
+/* ─── Data ──────────────────────────────────────────────────────── */
+const data = [
+  {x:1998.0,y:420},{x:1998.5,y:480},
+  {x:1999.0,y:600},{x:1999.7,y:680},
+  {x:2000.0,y:671},{x:2000.6,y:850},
+  {x:2001.0,y:1543},{x:2001.7,y:3100},
+  {x:2002.0,y:5743},{x:2002.6,y:7222},
+  {x:2003.0,y:6350},{x:2003.5,y:5100},
+  {x:2004.0,y:3800},{x:2004.5,y:4200},
+  {x:2005.0,y:2900},{x:2005.5,y:500},
+  {x:2006.0,y:380},{x:2006.5,y:300},
+  {x:2007.0,y:220},{x:2007.5,y:184},
+  {x:2008.0,y:340},{x:2008.5,y:1780},
+  {x:2009.0,y:830},{x:2009.5,y:700},
+  {x:2010.0,y:650},{x:2010.5,y:680},
+  {x:2011.0,y:830},{x:2011.5,y:920},
+  {x:2012.0,y:980},{x:2012.5,y:900},
+  {x:2013.0,y:800},{x:2013.5,y:820},
+  {x:2014.0,y:1100},{x:2014.5,y:950},
+  {x:2015.0,y:700},{x:2015.5,y:600},
+  {x:2016.0,y:480},{x:2016.5,y:450},
+  {x:2017.0,y:342},{x:2017.5,y:350},
+  {x:2018.0,y:430},{x:2018.5,y:700},
+  {x:2019.0,y:780},{x:2019.5,y:2500},
+  {x:2020.0,y:2000},{x:2020.25,y:4500},
+  {x:2020.5,y:2800},{x:2020.75,y:2300},
+  {x:2021.0,y:1700},{x:2021.5,y:1650},
+  {x:2022.0,y:1900},{x:2022.5,y:2500},
+  {x:2023.0,y:1800},{x:2023.5,y:1500},
+  {x:2024.0,y:2100},{x:2024.5,y:1400},
+  {x:2025.0,y:600},{x:2025.5,y:750},
+  {x:2026.0,y:500},{x:2026.17,y:530},
+  {x:2026.33,y:637},{x:2026.42,y:488},
+  {x:2026.46,y:429},{x:2026.6,y:406},
+  {x:2026.63,y:408}
+];
+
+const eras = [
+  {start:1998,   end:2009,   color:'rgba(50,102,173,0.10)', border:'#3266ad', label:'Emergente',  textColor:'#185FA5'},
+  {start:2009,   end:2019,   color:'rgba(212,131,10,0.09)', border:'#d4830a', label:'Frontera',   textColor:'#93580A'},
+  {start:2019,   end:2021.5, color:'rgba(29,158,117,0.10)', border:'#1d9e75', label:'Emergente',  textColor:'#0F6E56'},
+  {start:2021.5, end:2026.6, color:'rgba(192,57,43,0.09)',  border:'#c0392b', label:'Standalone', textColor:'#922B21'}
+];
+
+const events = [
+  {x:2002.6,  label:'Pico histórico\n7.222 pb', y:7222},
+  {x:2007.5,  label:'Mínimo 184 pb',            y:184},
+  {x:2008.5,  label:'Crisis\nLehman',           y:1780},
+  {x:2014.0,  label:'Default\nselectivo',       y:1100},
+  {x:2017.0,  label:'Mínimo\ndécada 342',       y:342},
+  {x:2019.5,  label:'PASO\n2019',               y:2500},
+  {x:2020.25, label:'Pandemia\n+ default',      y:4500},
+  {x:2024.0,  label:'Inicio\nMilei ~2100',      y:2100},
+  {x:2026.6,  label:'Mínimo 8 años\n406 pb',    y:406}
+];
+
+/* Presidents — only from N. Kirchner onwards, shown in strip */
+const presidents = [
+  {label:'N. Kirchner',   start:2003.5, end:2007.9, color:'#2d7d46', padding: 0.15},
+  {label:'CFK I',         start:2007.9, end:2011.9, color:'#248a4a', padding: 0.15},
+  {label:'CFK II',        start:2011.9, end:2015.9, color:'#1e7a40', padding: 0.15},
+  {label:'Macri',         start:2015.9, end:2019.9, color:'#b8860b', padding: 0.15},
+  {label:'A. Fernández',  start:2019.9, end:2023.9, color:'#1a6ea3', padding: 0.15},
+  {label:'Milei',         start:2023.9, end:2026.6, color:'#7b2fa0', padding: 0.15}
+];
+
+/* ─── Build president strip ─────────────────────────────────────── */
+const STRIP_START = presidents[0].start;
+const STRIP_END   = presidents[presidents.length - 1].end;
+const stripRange  = STRIP_END - STRIP_START;
+const strip = document.getElementById('pres-strip');
+let activePresIdx = null;
+
+presidents.forEach((p, i) => {
+  const widthPct = ((p.end - p.start) / stripRange * 100).toFixed(3) + '%';
+  const btn = document.createElement('button');
+  btn.className = 'pres-seg';
+  btn.style.cssText = `width:${widthPct}; background:${p.color};`;
+  btn.textContent = p.label;
+  btn.title = `${p.label} (${Math.floor(p.start)}–${Math.floor(p.end)}) — clic para hacer zoom`;
+  btn.setAttribute('aria-label', `Ver período de ${p.label}`);
+
+  btn.addEventListener('click', () => {
+    if (activePresIdx === i) {
+      /* second click → reset */
+      activePresIdx = null;
+      setRange(1998, 2026.6);
+      strip.querySelectorAll('.pres-seg').forEach(s => {
+        s.classList.remove('active', 'inactive');
+      });
+      setActivePill(null);
+    } else {
+      activePresIdx = i;
+      const pad = (p.end - p.start) * 0.05;
+      setRange(p.start - pad, p.end + pad);
+      strip.querySelectorAll('.pres-seg').forEach((s, j) => {
+        s.classList.toggle('active',   j === i);
+        s.classList.toggle('inactive', j !== i);
+      });
+      setActivePill(null);
+    }
+  });
+
+  strip.appendChild(btn);
+});
+
+/* ─── Helpers ───────────────────────────────────────────────────── */
+function getMsciAt(year) {
+  for (const e of eras) if (year >= e.start && year <= e.end) return e;
+  return eras[0];
+}
+function getPresAt(year) {
+  for (const p of presidents) if (year >= p.start && year <= p.end) return p.label;
+  return '';
+}
+function yearLabel(x) {
+  const yr = Math.floor(x);
+  const h  = (x % 1) >= 0.4 ? ' (2° sem.)' : '';
+  return yr + h;
+}
+
+/* ─── Plugins ───────────────────────────────────────────────────── */
+const bgPlugin = {
+  id: 'eraBg',
+  beforeDatasetsDraw(chart) {
+    const {ctx, chartArea:{left,right,top,bottom}, scales:{x}} = chart;
+    if (!x) return;
+    eras.forEach(era => {
+      const x1 = Math.max(left,  x.getPixelForValue(era.start));
+      const x2 = Math.min(right, x.getPixelForValue(era.end));
+      if (x2 <= x1) return;
+      ctx.save();
+      ctx.fillStyle = era.color;
+      ctx.fillRect(x1, top, x2 - x1, bottom - top);
+      ctx.strokeStyle = era.border;
+      ctx.globalAlpha = 0.4;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath(); ctx.moveTo(x1, top); ctx.lineTo(x1, bottom); ctx.stroke();
+      ctx.restore();
+    });
+  }
+};
+
+const labelsPlugin = {
+  id: 'eraLabels',
+  afterDraw(chart) {
+    const {ctx, chartArea:{left,right,top}, scales:{x}} = chart;
+    if (!x) return;
+    eras.forEach(era => {
+      const x1 = Math.max(left,  x.getPixelForValue(era.start));
+      const x2 = Math.min(right, x.getPixelForValue(era.end));
+      if (x2 <= x1) return;
+      const mid       = (x1 + x2) / 2;
+      const available = x2 - x1;
+      ctx.save();
+      ctx.font         = '600 10px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+      ctx.fillStyle    = era.textColor;
+      ctx.globalAlpha  = 0.75;
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'top';
+      const fullText  = 'MSCI ' + era.label.toUpperCase();
+      const shortText = era.label.toUpperCase();
+      const tw        = ctx.measureText(fullText).width;
+      const txt       = available > tw + 12 ? fullText
+                      : available > ctx.measureText(shortText).width + 8 ? shortText
+                      : '';
+      if (txt) ctx.fillText(txt, mid, top + 6);
+      ctx.restore();
+    });
+  }
+};
+
+const eventsPlugin = {
+  id: 'eventsPlugin',
+  afterDraw(chart) {
+    const {ctx, chartArea:{top,bottom,left,right}, scales:{x,y}} = chart;
+    if (!x || !y) return;
+    events.forEach(ev => {
+      const px = x.getPixelForValue(ev.x);
+      if (px < left || px > right) return;
+      const dataY = Math.min(ev.y, y.max * 0.97);
+      const py    = y.getPixelForValue(dataY);
+
+      /* dashed vertical line */
+      ctx.save();
+      ctx.strokeStyle = 'rgba(80,80,80,0.18)';
+      ctx.lineWidth   = 1;
+      ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, bottom); ctx.stroke();
+      ctx.restore();
+
+      /* label */
+      const lines      = ev.label.split('\n');
+      const fontSize   = 10;
+      const lineHeight = 13;
+      const pad        = {x: 5, y: 4};
+      ctx.font = `500 ${fontSize}px -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`;
+      const maxW = lines.reduce((m, l) => Math.max(m, ctx.measureText(l).width), 0);
+      const bw   = maxW + pad.x * 2;
+      const bh   = lines.length * lineHeight + pad.y * 2;
+      let lx = Math.max(left + 2, Math.min(right - bw - 2, px - bw / 2));
+      let ly = Math.max(top + 2, py - bh - 8);
+
+      ctx.save();
+      ctx.fillStyle   = 'rgba(255,255,255,0.93)';
+      ctx.strokeStyle = 'rgba(180,180,180,0.55)';
+      ctx.lineWidth   = 0.5;
+      const r = 3;
+      ctx.beginPath();
+      ctx.moveTo(lx+r, ly); ctx.lineTo(lx+bw-r, ly);
+      ctx.arcTo(lx+bw, ly,   lx+bw, ly+r,   r);
+      ctx.lineTo(lx+bw, ly+bh-r);
+      ctx.arcTo(lx+bw, ly+bh, lx+bw-r, ly+bh, r);
+      ctx.lineTo(lx+r,  ly+bh);
+      ctx.arcTo(lx,  ly+bh, lx, ly+bh-r, r);
+      ctx.lineTo(lx,  ly+r);
+      ctx.arcTo(lx,  ly,     lx+r, ly,    r);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      ctx.fillStyle    = '#333';
+      ctx.textAlign    = 'left';
+      ctx.textBaseline = 'top';
+      lines.forEach((line, i) =>
+        ctx.fillText(line, lx + pad.x, ly + pad.y + i * lineHeight)
+      );
+      ctx.restore();
+    });
+  }
+};
+
+/* ─── Chart ─────────────────────────────────────────────────────── */
+const canvas = document.getElementById('chart');
+const cctx   = canvas.getContext('2d');
+const grad   = cctx.createLinearGradient(0, 0, 0, 360);
+grad.addColorStop(0, 'rgba(50,102,173,0.22)');
+grad.addColorStop(1, 'rgba(50,102,173,0.00)');
+
+const chart = new Chart(canvas, {
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Riesgo País (pb)',
+      data,
+      borderColor: '#2a5aad',
+      borderWidth: 2.5,
+      backgroundColor: grad,
+      fill: true,
+      tension: 0.38,
+      pointRadius: 0,
+      pointHoverRadius: 6,
+      pointHoverBackgroundColor: '#2a5aad',
+      pointHoverBorderColor: '#fff',
+      pointHoverBorderWidth: 2.5
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    parsing: false,
+    animation: { duration: 300 },
+    scales: {
+      x: {
+        type: 'linear',
+        min: 1998, max: 2026.6,
+        ticks: {
+          stepSize: 2,
+          callback: v => (Number.isInteger(v) && v % 2 === 0) ? v : '',
+          color: '#aaa',
+          font: { size: 11 },
+          maxRotation: 0,
+          padding: 6
+        },
+        grid:   { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+        border: { display: false }
+      },
+      y: {
+        min: 0, max: 8200,
+        ticks: {
+          callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v,
+          color: '#aaa',
+          font: { size: 11 }
+        },
+        grid:   { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+        border: { display: false },
+        title:  { display: true, text: 'Puntos básicos (pb)', color: '#bbb', font: { size: 11 } }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: false,
+        external({tooltip}) {
+          const tt = document.getElementById('tt');
+          if (tooltip.opacity === 0) { tt.style.display = 'none'; return; }
+          const dp  = tooltip.dataPoints[0];
+          const {x: yr, y: val} = dp.raw;
+          const era  = getMsciAt(yr);
+          const pres = getPresAt(yr);
+          document.getElementById('tt-year').textContent = yearLabel(yr);
+          document.getElementById('tt-val').textContent  = val.toLocaleString('es-AR');
+          document.getElementById('tt-msci').innerHTML   =
+            `<span style="color:${era.textColor};font-weight:600">MSCI ${era.label}</span>`;
+          document.getElementById('tt-pres').textContent = pres ? '↳ ' + pres : '';
+          const rect = canvas.getBoundingClientRect();
+          tt.style.display = 'block';
+          const tx = rect.left + dp.element.x + 16;
+          const ty = rect.top  + dp.element.y - 20;
+          tt.style.left = Math.min(tx, window.innerWidth - 210) + 'px';
+          tt.style.top  = Math.max(ty, 8) + 'px';
+        }
+      }
+    },
+    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+    layout: { padding: { top: 12, bottom: 4, left: 0, right: 8 } }
+  },
+  plugins: [bgPlugin, labelsPlugin, eventsPlugin]
+});
+
+/* ─── Zoom helpers ──────────────────────────────────────────────── */
+function setRange(min, max) {
+  chart.options.scales.x.min = min;
+  chart.options.scales.x.max = max;
+  chart.update();
+}
+
+function setActivePill(id) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  if (id) document.getElementById(id).classList.add('active');
+}
+
+/* MSCI pills */
+function msciZoom(min, max, pillId) {
+  /* deselect any active president */
+  activePresIdx = null;
+  strip.querySelectorAll('.pres-seg').forEach(s => s.classList.remove('active','inactive'));
+  setRange(min, max);
+  setActivePill(pillId);
+}
+
+document.getElementById('pill-all').onclick  = () => msciZoom(1998,   2026.6, 'pill-all');
+document.getElementById('pill-em1').onclick  = () => msciZoom(1998,   2009,   'pill-em1');
+document.getElementById('pill-fr').onclick   = () => msciZoom(2009,   2019,   'pill-fr');
+document.getElementById('pill-em2').onclick  = () => msciZoom(2019,   2021.5, 'pill-em2');
+document.getElementById('pill-sa').onclick   = () => msciZoom(2021.5, 2026.6, 'pill-sa');
+
+/* Activate "todo" by default */
+document.getElementById('pill-all').classList.add('active');
+
+canvas.addEventListener('mouseleave', () => {
+  document.getElementById('tt').style.display = 'none';
+});
+</script>
+</body>
+</html>
